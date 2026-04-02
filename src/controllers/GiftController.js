@@ -6,6 +6,7 @@ const Gift = require("../models/Gift");
 const Interest = require("../models/Interest");
 const Event = require("../models/Event");
 const GiftAssignment = require("../models/GiftAssignment");
+const GiftUsage = require("../models/GiftUsage");
 
 const { upload } = require("../config/upload");
 const { normalizeHttpUrl } = require("../lib/normalizeHttpUrl");
@@ -45,8 +46,39 @@ const GiftController = {
     try {
       const userId = req.session.user._id;
 
-      const gifts = await Gift.findForUser(userId);
+      const giftsRaw = await Gift.find({
+        $or: [{ createdBy: userId }, { isPublic: true }],
+      })
+        .populate("interests")
+        .lean();
+
       const interests = await Interest.findForUser(userId);
+
+      const giftIds = giftsRaw.map((g) => g._id);
+
+      const usageDocs = giftIds.length
+        ? await GiftUsage.find({
+            createdBy: userId,
+            gift: { $in: giftIds },
+          })
+            .select("gift count")
+            .lean()
+        : [];
+
+      const usageByGiftId = new Map(
+        usageDocs.map((d) => [String(d.gift), Number(d.count || 0)]),
+      );
+
+      const gifts = giftsRaw.map((g) => ({
+        ...g,
+        myGiftedCount: usageByGiftId.get(String(g._id)) || 0,
+      }));
+
+      gifts.sort((a, b) => {
+        const d = (b.myGiftedCount || 0) - (a.myGiftedCount || 0);
+        if (d !== 0) return d;
+        return String(a.title || "").localeCompare(String(b.title || ""), "de");
+      });
 
       return res.render("gifts/index", { gifts, interests });
     } catch (err) {
@@ -184,7 +216,6 @@ const GiftController = {
         req.session.success = makePublic
           ? "Geschenk als öffentlich angelegt"
           : "Geschenk angelegt";
-
         return res.redirect(`/gifts/${gift._id}`);
       } catch (saveErr) {
         console.error(saveErr);
@@ -218,6 +249,15 @@ const GiftController = {
         req.session.error = "Geschenk nicht gefunden";
         return res.redirect("/gifts");
       }
+
+      const usageDoc = await GiftUsage.findOne({
+        createdBy: userId,
+        gift: gift._id,
+      })
+        .select("count")
+        .lean();
+
+      const myGiftedCount = usageDoc?.count || 0;
 
       const usageRaw = await GiftAssignment.find({
         gift: gift._id,
@@ -270,6 +310,7 @@ const GiftController = {
         gift,
         usage,
         availableEvents,
+        myGiftedCount,
       });
     } catch (err) {
       console.error(err);

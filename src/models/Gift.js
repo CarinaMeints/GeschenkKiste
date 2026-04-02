@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require("./GiftUsage");
 
 const imageSchema = new mongoose.Schema(
   {
@@ -60,7 +61,7 @@ giftSchema.statics.findForUser = function (userId) {
     $or: [{ createdBy: userId }, { isPublic: true }],
   })
     .populate("interests")
-    .sort({ usageCount: -1, createdAt: -1 });
+    .sort({ createdAt: -1, title: 1 });
 };
 
 giftSchema.statics.recommendForEvent = async function (
@@ -71,6 +72,13 @@ giftSchema.statics.recommendForEvent = async function (
   const Event = mongoose.model("Event");
   const GiftAssignment = mongoose.model("GiftAssignment");
   const PersonOccasion = mongoose.model("PersonOccasion");
+  const GiftUsage = mongoose.model("GiftUsage");
+
+  const EXPLICIT_MATCH_POINTS = 4;
+  const INFERRED_MATCH_POINTS = 2;
+
+  const USAGE_PER_GIFT = 0.2;
+  const USAGE_CAP_COUNT = 15;
 
   const event = await Event.findById(eventId).populate({
     path: "personOccasion",
@@ -99,53 +107,78 @@ giftSchema.statics.recommendForEvent = async function (
         createdBy: userId,
         event: { $in: personEventIds },
       })
-        .select("gift status")
+        .select("gift")
         .populate({ path: "gift", select: "interests" })
         .lean()
     : [];
 
   const excludedGiftIds = new Set();
-
-  const seedInterestIds = new Set(
-    (person.interests || []).map((x) => String(x?._id || x)).filter(Boolean),
-  );
-
   for (const a of allAssignments) {
     const gid = a?.gift?._id ? String(a.gift._id) : String(a.gift);
     if (gid) excludedGiftIds.add(gid);
+  }
 
+  const explicitInterestIds = new Set(
+    (person.interests || []).map((x) => String(x?._id || x)).filter(Boolean),
+  );
+
+  const inferredInterestIds = new Set();
+  for (const a of allAssignments) {
     const giftInterests = a?.gift?.interests || [];
     for (const intId of giftInterests) {
-      seedInterestIds.add(String(intId?._id || intId));
+      const s = String(intId?._id || intId);
+      if (!s) continue;
+      if (!explicitInterestIds.has(s)) inferredInterestIds.add(s);
     }
   }
 
-  const gifts = await this.findForUser(userId);
+  const gifts = await this.find({
+    $or: [{ createdBy: userId }, { isPublic: true }],
+  })
+    .populate("interests")
+    .lean();
 
-  const seedSet = seedInterestIds;
+  const candidates = gifts.filter((g) => !excludedGiftIds.has(String(g._id)));
 
-  const scored = gifts
-    .filter((g) => !excludedGiftIds.has(String(g._id)))
-    .map((gift) => {
-      let score = 0;
+  const usageDocs = candidates.length
+    ? await GiftUsage.find({
+        createdBy: userId,
+        gift: { $in: candidates.map((c) => c._id) },
+      })
+        .select("gift count")
+        .lean()
+    : [];
 
-      const giftInterestIds = (gift.interests || []).map((i) =>
-        String(i?._id || i),
-      );
-
-      for (const id of giftInterestIds) {
-        if (seedSet.has(id)) score += 3;
-      }
-
-      score += Math.min((gift.usageCount || 0) / 5, 2);
-
-      return { gift, score };
-    });
-
-  scored.sort(
-    (a, b) =>
-      b.score - a.score || (b.gift.usageCount || 0) - (a.gift.usageCount || 0),
+  const usageByGiftId = new Map(
+    usageDocs.map((d) => [String(d.gift), Number(d.count || 0)]),
   );
+
+  const scored = candidates.map((gift) => {
+    const giftInterestIds = (gift.interests || []).map((i) =>
+      String(i?._id || i),
+    );
+
+    let matchPoints = 0;
+    for (const iid of giftInterestIds) {
+      if (explicitInterestIds.has(iid)) matchPoints += EXPLICIT_MATCH_POINTS;
+      else if (inferredInterestIds.has(iid))
+        matchPoints += INFERRED_MATCH_POINTS;
+    }
+
+    const usageRaw = usageByGiftId.get(String(gift._id)) || 0;
+    const usageEff = Math.min(usageRaw, USAGE_CAP_COUNT);
+
+    let score = matchPoints;
+
+    if (matchPoints > 0) {
+      const usageBonus = usageEff * USAGE_PER_GIFT;
+      score += usageBonus;
+    }
+
+    return { gift, score, usageEff };
+  });
+
+  scored.sort((a, b) => b.score - a.score || b.usageEff - a.usageEff);
 
   return scored.slice(0, limit).map((x) => x.gift);
 };

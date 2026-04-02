@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require("./GiftUsage");
 
 const giftAssignmentSchema = new mongoose.Schema(
   {
@@ -39,20 +40,57 @@ giftAssignmentSchema.index({ event: 1 });
 giftAssignmentSchema.index({ createdBy: 1 });
 giftAssignmentSchema.index({ status: 1 });
 
-giftAssignmentSchema.pre("save", function (next) {
-  this._wasNew = this.isNew;
-  next();
+giftAssignmentSchema.pre("save", async function (next) {
+  try {
+    this._wasNew = this.isNew;
+
+    if (!this.isNew) {
+      const session =
+        typeof this.$session === "function" ? this.$session() : null;
+
+      let q = this.constructor.findById(this._id).select("status").lean();
+      if (session) q = q.session(session);
+
+      const prev = await q;
+      this._prevStatus = prev?.status || null;
+    } else {
+      this._prevStatus = null;
+    }
+
+    next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 giftAssignmentSchema.post("save", async function (doc) {
   const Event = mongoose.model("Event");
-  const Gift = mongoose.model("Gift");
+  const GiftUsage = mongoose.model("GiftUsage");
 
   const event = await Event.findById(doc.event);
   if (event) await event.recalculateStatus();
 
-  if (doc._wasNew) {
-    await Gift.updateOne({ _id: doc.gift }, { $inc: { usageCount: 1 } });
+  const prev = doc._prevStatus;
+
+  const becameDone =
+    doc.status === "fertig" && (doc._wasNew || prev !== "fertig");
+
+  const becameNotDone = doc.status !== "fertig" && prev === "fertig";
+
+  if (becameDone) {
+    await GiftUsage.increment({
+      giftId: doc.gift,
+      userId: doc.createdBy,
+      delta: 1,
+      session: typeof doc.$session === "function" ? doc.$session() : null,
+    });
+  } else if (becameNotDone) {
+    await GiftUsage.increment({
+      giftId: doc.gift,
+      userId: doc.createdBy,
+      delta: -1,
+      session: typeof doc.$session === "function" ? doc.$session() : null,
+    });
   }
 });
 
@@ -60,17 +98,19 @@ giftAssignmentSchema.post("findOneAndDelete", async function (doc) {
   if (!doc) return;
 
   const Event = mongoose.model("Event");
-  const Gift = mongoose.model("Gift");
+  const GiftUsage = mongoose.model("GiftUsage");
 
   const event = await Event.findById(doc.event);
   if (event) await event.recalculateStatus();
 
-  await Gift.updateOne({ _id: doc.gift }, { $inc: { usageCount: -1 } });
-
-  await Gift.updateOne(
-    { _id: doc.gift, usageCount: { $lt: 0 } },
-    { $set: { usageCount: 0 } },
-  );
+  if (doc.status === "fertig") {
+    await GiftUsage.increment({
+      giftId: doc.gift,
+      userId: doc.createdBy,
+      delta: -1,
+      session: this.getOptions?.().session || null,
+    });
+  }
 });
 
 giftAssignmentSchema.pre(
@@ -81,18 +121,28 @@ giftAssignmentSchema.pre(
       const filter = this.getFilter();
       const session = this.getOptions()?.session || null;
 
-      let q = this.model.find(filter).select("gift").lean();
+      let q = this.model
+        .find({ ...filter, status: "fertig" })
+        .select("gift createdBy")
+        .lean();
+
       if (session) q = q.session(session);
 
       const docs = await q;
-      const counts = new Map();
+
+      const byUser = new Map();
 
       for (const d of docs) {
-        const gid = String(d.gift);
-        counts.set(gid, (counts.get(gid) || 0) + 1);
+        const userId = String(d.createdBy);
+        const giftId = String(d.gift);
+
+        if (!byUser.has(userId)) byUser.set(userId, new Map());
+        const m = byUser.get(userId);
+
+        m.set(giftId, (m.get(giftId) || 0) + 1);
       }
 
-      this._giftCountsToDecrement = counts;
+      this._giftCountsToDecrementByUser = byUser;
       next();
     } catch (err) {
       next(err);
@@ -104,27 +154,40 @@ giftAssignmentSchema.post(
   "deleteMany",
   { query: true, document: false },
   async function () {
-    const counts = this._giftCountsToDecrement;
-    if (!counts || counts.size === 0) return;
+    const byUser = this._giftCountsToDecrementByUser;
+    if (!byUser || byUser.size === 0) return;
 
-    const Gift = mongoose.model("Gift");
+    const GiftUsage = mongoose.model("GiftUsage");
+    const session = this.getOptions()?.session || null;
 
     const ops = [];
-    for (const [giftId, n] of counts.entries()) {
-      ops.push({
-        updateOne: {
-          filter: { _id: giftId },
-          update: { $inc: { usageCount: -n } },
-        },
-      });
+
+    for (const [userId, giftMap] of byUser.entries()) {
+      for (const [giftId, n] of giftMap.entries()) {
+        ops.push({
+          updateOne: {
+            filter: { createdBy: userId, gift: giftId },
+            update: { $inc: { count: -n } },
+            upsert: true,
+          },
+        });
+      }
     }
 
-    await Gift.bulkWrite(ops, { ordered: false });
+    if (ops.length) {
+      await GiftUsage.bulkWrite(ops, {
+        ordered: false,
+        session: session || undefined,
+      });
 
-    await Gift.updateMany(
-      { _id: { $in: Array.from(counts.keys()) }, usageCount: { $lt: 0 } },
-      { $set: { usageCount: 0 } },
-    );
+      // clamp < 0
+      const clampQuery = GiftUsage.updateMany(
+        { count: { $lt: 0 } },
+        { $set: { count: 0 } },
+      );
+      if (session) clampQuery.session(session);
+      await clampQuery;
+    }
   },
 );
 

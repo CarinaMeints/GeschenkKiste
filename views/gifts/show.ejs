@@ -39,7 +39,7 @@
       <h1 class="app-panel-title truncate">🎁 <%= gift.title %></h1>
 
       <p class="text-xs text-white/80 mt-1 font-semibold">
-        <%= (gift.usageCount || 0) %>× zugeordnet
+        <%= (gift.myGiftedCount || 0) %>× von dir verschenkt
         <% if (gift.isPublic) { %> · 🌍 Katalog (read-only) <% } %>
       </p>
     </div>
