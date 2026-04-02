@@ -1,0 +1,91 @@
+<%- include('../partials/app-head', { title: 'Neuer Anlass – GeschenkKiste' }) %>
+
+<%
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+%>
+
+<div class="mb-8">
+  <h1 class="app-h1">➕ Neuen Anlass anlegen</h1>
+  <p class="app-subtle mt-1">Erstelle einen neuen Anlass, der Personen zugeordnet werden kann.</p>
+</div>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Anlass anlegen</h2>
+  </div>
+
+  <div class="app-panel-body">
+    <form action="/occasions" method="POST" class="space-y-6">
+
+      <div>
+        <label class="block text-white font-semibold mb-2">Name *</label>
+        <input type="text" name="name" required class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20
+                      focus:outline-none focus:ring-2 focus:ring-white/40" placeholder="z.B. Taufe">
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-2">Beschreibung</label>
+        <textarea name="description" rows="3" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20
+                         focus:outline-none focus:ring-2 focus:ring-white/40" placeholder="Beschreibung des Anlasses..."></textarea>
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-2">Icon</label>
+        <%- include('../partials/icon-picker-field', {
+          name: 'icon',
+          value: '',
+          fallback: '🎉',
+          inputClass: 'w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20'
+        }) %>
+        <p class="text-xs text-white/80 mt-2">Wähle dein Icon über "😊".</p>
+      </div>
+
+      <div class="app-item">
+        <p class="text-sm font-semibold text-white mb-3">Festes Datum</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-white/80 font-semibold mb-1">Tag</label>
+            <input type="number" name="day" min="1" max="31" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20" placeholder="24">
+          </div>
+          <div>
+            <label class="block text-xs text-white/80 font-semibold mb-1">Monat</label>
+            <select name="month" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20">
+              <option value="">-- Monat wählen --</option>
+              <% months.forEach((m, idx) => { %>
+              <option value="<%= idx + 1 %>"><%= m %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+        <p class="text-xs text-white/80 mt-2">Für bewegliche Anlässe kann Tag/Monat leer bleiben → Datum wird pro Jahr gepflegt.</p>
+      </div>
+
+      <div class="app-item">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" name="isRecurring" value="true" checked class="check-on-blue">
+          <span class="text-white font-semibold">Wiederkehrender Anlass (jährlich)</span>
+        </label>
+      </div>
+
+      <div class="app-item">
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" name="isPublic" value="true" class="check-on-blue mt-0.5">
+          <div>
+            <span class="text-white font-semibold block mb-1">🌍 Anlass öffentlich machen</span>
+            <p class="text-sm text-white/80">
+              Wenn aktiviert, wird der neue Anlass öffentlich (Katalog).
+            </p>
+          </div>
+        </label>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button type="submit" class="btn-primary flex-1 py-3">Speichern</button>
+        <a href="/occasions" class="btn-surface flex-1 justify-center py-3">Abbrechen</a>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<%- include('../partials/app-foot') %>

@@ -1,0 +1,124 @@
+<div class="fixed inset-0 hidden items-start justify-center bg-black/50 z-50 overflow-y-auto py-6 px-4" data-ce-modal>
+  <div class="app-modal w-full max-w-lg rounded-xl shadow-xl mx-auto max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="app-modal-header px-6 py-4 flex items-center justify-between">
+      <h3 class="app-modal-title text-lg font-bold">Event abschließen</h3>
+      <button type="button" class="app-modal-close text-xl font-bold" data-ce-close>×</button>
+    </div>
+
+    <form class="p-6 space-y-4 flex-1 min-h-0 overflow-y-auto" data-ce-form>
+      <p class="text-sm text-slate-700 font-semibold">
+        Event als abgeschlossen markieren?
+      </p>
+
+      <div class="space-y-2" data-ce-ideas-wrap>
+        <div class="flex items-center justify-between">
+          <label class="block text-sm font-medium text-slate-700">
+            Vorhandene Ideen (klicken zum Übernehmen)
+          </label>
+          <span class="text-xs text-slate-500 font-semibold" data-ce-ideas-count></span>
+        </div>
+
+        <div class="space-y-2" data-ce-ideas-list>
+          <div class="text-sm text-slate-500">lädt…</div>
+        </div>
+
+        <p class="text-xs text-slate-500">
+          Klick auf eine Idee → Geschenk wird übernommen und du kannst direkt abschließen.
+        </p>
+      </div>
+
+      <div class="border-t border-slate-200 pt-4">
+        <label class="inline-flex items-center gap-2 font-semibold text-slate-800">
+          <input type="checkbox" data-ce-add-gift>
+          Geschenk für die Historie hinzufügen
+        </label>
+
+        <div class="mt-3 hidden space-y-3" data-ce-gift-fields>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Vorhandenes Geschenk</label>
+            <select class="w-full px-3 py-2 border border-slate-300 rounded-lg" data-ce-gift-select>
+              <option value="">– laden… –</option>
+            </select>
+            <p class="text-xs text-slate-500 mt-1">
+              Oder unten ein neues Geschenk erstellen.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-2">
+            <label class="block text-sm font-medium text-slate-700">Neues Geschenk</label>
+            <input type="text" class="w-full px-3 py-2 border border-slate-300 rounded-lg" placeholder="Titel *" data-ce-new-title>
+            <input type="text" class="w-full px-3 py-2 border border-slate-300 rounded-lg" placeholder="Beschreibung" data-ce-new-description>
+            <input type="url" class="w-full px-3 py-2 border border-slate-300 rounded-lg" placeholder="Link" data-ce-new-link>
+          </div>
+
+          <div class="p-3 rounded-lg border border-dashed border-slate-300 bg-white">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" class="mt-0.5" data-ce-new-gift-is-public>
+              <div>
+                <p class="text-sm font-semibold text-slate-700">🌍 Geschenk öffentlich machen</p>
+                <p class="text-xs text-slate-500">
+                  Wenn aktiviert, wird das neue Geschenk öffentlich (Katalog).
+                </p>
+              </div>
+            </label>
+          </div>
+
+          <div class="space-y-2" data-ce-interests-wrap>
+            <label class="block text-sm font-medium text-slate-700">Interessenskategorien</label>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 border border-slate-200 rounded-lg p-3 bg-slate-50 max-h-48 overflow-y-auto" data-ce-interests-list>
+              <div class="text-sm text-slate-500">lädt…</div>
+            </div>
+
+            <div class="p-3 rounded-lg border border-dashed border-slate-300 bg-white">
+              <p class="text-sm font-semibold text-slate-700 mb-2">➕ Neue Kategorie direkt anlegen</p>
+
+              <div class="flex gap-2 items-center">
+                <input type="text" class="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-lg" placeholder="Name (z.B. Technik)" data-ce-new-interest-name>
+
+                <div class="w-28">
+                  <%- include('../partials/icon-picker-field', {
+                    name: 'newInterestIcon',
+                    value: '',
+                    fallback: '🎁',
+                    inputClass: 'w-full px-3 py-2 text-sm border border-slate-300 rounded-lg text-center',
+                    buttonClass: 'btn-surface',
+                    extraInputAttrs: 'data-ce-new-interest-icon'
+                  }) %>
+                </div>
+              </div>
+
+              <label class="mt-3 flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" class="mt-0.5" data-ce-new-interest-is-public>
+                <div>
+                  <p class="text-sm font-semibold text-slate-700">🌍 Interesse öffentlich machen</p>
+                  <p class="text-xs text-slate-500">
+                    Wenn aktiviert, wird das neue Interesse öffentlich (Katalog).
+                  </p>
+                </div>
+              </label>
+
+              <p class="text-xs text-slate-500 mt-2">Wird beim Abschließen erstellt und dem neuen Geschenk zugewiesen.</p>
+            </div>
+
+            <p class="text-xs text-slate-500">
+              Hinweis: Interessen werden nur genutzt, wenn du unten ein <b>neues Geschenk</b> erstellst.
+            </p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Notiz</label>
+            <input type="text" class="w-full px-3 py-2 border border-slate-300 rounded-lg" placeholder="z.B. Verpackung, Farbe, Ort …" data-ce-notes>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-sm text-red-700 font-semibold hidden" data-ce-error></p>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <button type="button" class="btn-surface" data-ce-cancel>Abbrechen</button>
+        <button type="submit" class="app-modal-btn-primary">Abschließen</button>
+      </div>
+    </form>
+  </div>
+</div>

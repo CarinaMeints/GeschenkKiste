@@ -1,0 +1,236 @@
+<%- include('../partials/app-head', { title: 'Anlässe für ' + person.name + ' – GeschenkKiste' }) %>
+
+<% const returnToOccasions = '/persons/' + person._id + '/occasions'; %>
+
+<%
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+  function movable(occ) {
+    return !(occ.day != null && occ.month != null) && occ.isBirthday !== true;
+  }
+
+  function dateTextFor(po) {
+    const occ = po.occasion;
+    const isBirthday = occ.isBirthday === true;
+
+    if (occ.day && occ.month) return `${occ.day}. ${months[(occ.month || 1) - 1]}`;
+    if (isBirthday && person.hasBirthday) return `${person.birthdayDay}. ${months[(person.birthdayMonth || 1) - 1]} (automatisch)`;
+    if (po.customDay && po.customMonth && po.customYear) return `${po.customDay}. ${months[(po.customMonth || 1) - 1]} (${po.customYear})`;
+    return 'beweglich (Datum fehlt)';
+  }
+%>
+
+<div class="mb-6">
+  <a href="/persons/<%= person._id %>" class="app-link">
+    ← Zurück zu <%= person.name %>
+  </a>
+</div>
+
+<div class="mb-8">
+  <h1 class="app-h1">🎉 Anlässe für <%= person.name %></h1>
+  <p class="app-subtle mt-1">Verwalte, welche Anlässe für diese Person relevant sind</p>
+</div>
+
+<section class="app-panel mb-8">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Zugeordnete Anlässe</h2>
+    <span class="app-panel-count"><%= (personOccasions || []).length %></span>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (!personOccasions || personOccasions.length === 0) { %>
+    <p class="text-sm text-white/80">Noch keine Anlässe zugeordnet.</p>
+    <% } else { %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <% personOccasions.forEach(po => { %>
+      <% if (!po.occasion) { %>
+      <%  %>
+      <% } else { %>
+
+      <%
+              const occ = po.occasion;
+              const isBirthday = occ.isBirthday === true;
+              const isMov = movable(occ);
+            %>
+
+      <div class="app-item">
+        <div class="min-w-0">
+          <p class="font-semibold text-white truncate">
+            <%= occ.icon %> <%= occ.name %>
+            <% if (isMov) { %>
+            <span class="text-xs text-white/80 font-semibold">· beweglich</span>
+            <% } %>
+            <% if (isBirthday) { %>
+            <span class="text-xs text-white/80 font-semibold">· Geburtstag</span>
+            <% } %>
+          </p>
+
+          <p class="app-item-meta"><%= dateTextFor(po) %></p>
+
+          <div class="mt-2 flex flex-wrap gap-2">
+            <% if (po.startYear) { %>
+            <span class="badge badge-planning">ab <%= po.startYear %></span>
+            <% } %>
+
+            <% if (po.endYear) { %>
+            <span class="badge badge-done">bis <%= po.endYear %></span>
+            <% } else { %>
+            <span class="badge badge-done">unbegrenzt</span>
+            <% } %>
+          </div>
+
+          <% if (!isBirthday || isMov) { %>
+          <details class="mt-3">
+            <summary class="app-item-sub-link cursor-pointer">
+              Aktionen ▾
+            </summary>
+
+            <div class="mt-3 p-3 rounded-lg border border-white/15 bg-white/10 space-y-3">
+
+              <% if (isMov) { %>
+              <div class="flex justify-between items-center gap-3">
+                <div class="text-xs text-white/80 font-semibold">
+                  Datum für dieses Jahr setzen
+                </div>
+                <a href="/persons/<%= person._id %>/occasions/<%= po._id %>/date?year=<%= (new Date().getFullYear()) %>&returnTo=<%= encodeURIComponent(returnToOccasions) %>" class="app-item-sub-link">
+                  Datum setzen →
+                </a>
+              </div>
+              <% } %>
+
+              <div class="border-t border-white/15 pt-3">
+                <p class="text-xs text-white/80 font-semibold mb-2">Zeitraum / Notiz</p>
+
+                <form action="/persons/<%= person._id %>/occasions/<%= po._id %>" method="POST" class="space-y-3">
+                  <input type="hidden" name="_method" value="PATCH">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <label class="block text-xs text-white/80 font-semibold mb-1">Startjahr *</label>
+                      <input type="number" name="startYear" min="2000" max="2100" required value="<%= po.startYear || new Date().getFullYear() %>" class="w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+                    </div>
+
+                    <div>
+                      <label class="block text-xs text-white/80 font-semibold mb-1">Endjahr</label>
+                      <input type="number" name="endYear" min="2000" max="2100" value="<%= po.endYear || '' %>" placeholder="leer = unbegrenzt" class="w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs text-white/80 font-semibold mb-1">Notiz</label>
+                    <input type="text" name="notes" value="<%= po.notes || '' %>" placeholder="z.B. Budget / Hinweis …" class="w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+                  </div>
+
+                  <div class="flex justify-end">
+                    <button type="submit" class="btn-surface text-xs">
+                      Speichern
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <% if (!isBirthday) { %>
+              <div class="border-t border-white/15 pt-3">
+                <form action="/persons/<%= person._id %>/occasions/<%= po._id %>" method="POST" data-pc-confirm data-pc-title="Anlass wirklich entfernen?" data-pc-message="Möchtest du den Anlass „<%= occ.name %>“ wirklich von „<%= person.name %>“ entfernen? Zugehörige Events und Geschenk-Zuordnungen werden dabei gelöscht." data-pc-ok="Ja, entfernen">
+                  <input type="hidden" name="_method" value="DELETE">
+                  <button type="submit" class="btn-surface text-xs" style="border-color:#fecaca;color:#b91c1c;">
+                    🗑️
+                  </button>
+                </form>
+              </div>
+              <% } %>
+
+            </div>
+          </details>
+          <% } else { %>
+          <div class="mt-3 text-xs text-white/80 font-semibold">
+            nicht entfernbar
+          </div>
+          <% } %>
+        </div>
+      </div>
+
+      <% } %>
+      <% }) %>
+    </div>
+
+    <% } %>
+  </div>
+</section>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Anlass hinzufügen</h2>
+  </div>
+
+  <div class="app-panel-body">
+    <form action="/persons/<%= person._id %>/occasions" method="POST" class="space-y-6">
+
+      <div>
+        <label class="block text-white font-semibold mb-2">Anlass *</label>
+        <select name="occasionId" required id="occasionSelect" class="w-full px-4 py-2.5 border border-white/20 rounded-lg bg-white text-slate-900">
+          <option value="">-- wählen --</option>
+          <% (availableOccasions || []).forEach(occ => { %>
+          <% const isMov = movable(occ); %>
+          <option value="<%= occ._id %>" data-movable="<%= isMov ? 'true' : 'false' %>">
+            <%= occ.icon %> <%= occ.name %><%= isMov ? ' (beweglich)' : '' %>
+          </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-white font-semibold mb-2">Startjahr</label>
+          <input type="number" name="startYear" min="2000" max="2100" placeholder="<%= new Date().getFullYear() %>" class="w-full px-4 py-2.5 border border-white/20 rounded-lg bg-white text-slate-900">
+          <p class="text-xs text-white/80 mt-1">leer = ab diesem Jahr (Default)</p>
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold mb-2">Endjahr</label>
+          <input type="number" name="endYear" min="2000" max="2100" placeholder="leer = unbegrenzt" class="w-full px-4 py-2.5 border border-white/20 rounded-lg bg-white text-slate-900">
+        </div>
+      </div>
+
+      <div id="customDateWrap" class="hidden">
+        <label class="block text-white font-semibold mb-2">Datum (optional, für bewegliche Anlässe)</label>
+        <input type="date" name="customDate" class="w-full px-4 py-2.5 border border-white/20 rounded-lg bg-white text-slate-900">
+        <p class="text-xs text-white/80 mt-2">Wenn leer, entsteht ggf. später eine Datum-Task.</p>
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-2">Notiz</label>
+        <input type="text" name="notes" class="w-full px-4 py-2.5 border border-white/20 rounded-lg bg-white text-slate-900" placeholder="z.B. Geschenkbudget, Hinweis…">
+      </div>
+
+      <button type="submit" class="btn-primary w-full">
+        Anlass hinzufügen
+      </button>
+    </form>
+  </div>
+</section>
+
+<div class="fixed inset-0 hidden items-center justify-center bg-black/50 z-50" data-pc-modal>
+  <div class="app-modal w-full max-w-lg rounded-xl shadow-xl mx-4">
+    <div class="app-modal-header px-6 py-4 flex items-center justify-between">
+      <h3 class="app-modal-title text-lg font-bold" data-pc-title>Bestätigen</h3>
+      <button type="button" class="app-modal-close text-xl font-bold" data-pc-close>×</button>
+    </div>
+
+    <div class="p-6 space-y-4">
+      <p class="text-sm text-slate-700 font-semibold" data-pc-message>
+        Möchtest du das wirklich tun?
+      </p>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <button type="button" class="btn-surface" data-pc-cancel>Abbrechen</button>
+        <button type="button" class="btn-primary" data-pc-ok>Bestätigen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/person-occasions.js" defer></script>
+<script src="/js/person-confirm.js" defer></script>
+
+<%- include('../partials/app-foot') %>

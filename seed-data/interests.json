@@ -1,0 +1,206 @@
+[
+  {
+    "name": "Technik & Gadgets",
+    "description": "Elektronik, Gadgets, Konsolen, Tablets, Smart Home",
+    "icon": "💻",
+    "isPublic": true
+  },
+  {
+    "name": "Tüfteln (Modellbau, DIY-Tech)",
+    "description": "Modellbau, Maker-Projekte, Basteln mit Technik, kleine Drohnen/Elektronik-Projekte",
+    "icon": "🛠️",
+    "isPublic": true
+  },
+  {
+    "name": "Sport & Fitness",
+    "description": "Fitness, Training, Sportausrüstung, Sportevents",
+    "icon": "🏋️",
+    "isPublic": true
+  },
+  {
+    "name": "Wandern & Outdoor",
+    "description": "Wandern, Outdoor-Ausrüstung, Camping, Natur",
+    "icon": "🥾",
+    "isPublic": true
+  },
+  {
+    "name": "Wassersport",
+    "description": "Schwimmen, SUP, Segeln, Tauchen, Wassersport-Zubehör",
+    "icon": "🏄",
+    "isPublic": true
+  },
+  {
+    "name": "Kochen",
+    "description": "Kochen, Küchengeräte, Kochbücher, Gewürze, Genussküche",
+    "icon": "🍳",
+    "isPublic": true
+  },
+  {
+    "name": "Backen",
+    "description": "Backen, Backformen, Zutaten, Deko, Rezeptideen",
+    "icon": "🧁",
+    "isPublic": true
+  },
+  {
+    "name": "Lesen & Bücher",
+    "description": "Bücher, E-Reader, Buchzubehör, Literatur",
+    "icon": "📚",
+    "isPublic": true
+  },
+  {
+    "name": "Schreiben (Poetry, Journaling)",
+    "description": "Schreiben, Poetry, Journaling, Notizbücher, Stifte, Schreibworkshops",
+    "icon": "✍️",
+    "isPublic": true
+  },
+  {
+    "name": "Gaming",
+    "description": "Videospiele, Konsolen, PC-Gaming, Zubehör, Streaming",
+    "icon": "🎮",
+    "isPublic": true
+  },
+  {
+    "name": "Gesellschaftsspiele & Brettspiele",
+    "description": "Brettspiele, Kartenspiele, Puzzles, Spieleabende",
+    "icon": "🎲",
+    "isPublic": true
+  },
+  {
+    "name": "Kultur (Museum, Theater, Konzerte)",
+    "description": "Museen, Theater, Konzerte, Kulturveranstaltungen, Tickets",
+    "icon": "🎭",
+    "isPublic": true
+  },
+  {
+    "name": "Musik machen (Instrumente)",
+    "description": "Instrumente, Musikunterricht, Zubehör, Band/Studio",
+    "icon": "🎸",
+    "isPublic": true
+  },
+  {
+    "name": "Musik hören (Vinyl, Playlists)",
+    "description": "Vinyl, Hi‑Fi, Kopfhörer, Streaming, Playlists",
+    "icon": "🎧",
+    "isPublic": true
+  },
+  {
+    "name": "Reisen & Urlaub",
+    "description": "Reisen, Reiseplanung, Reisezubehör, Städtetrips, Fernweh",
+    "icon": "✈️",
+    "isPublic": true
+  },
+  {
+    "name": "Freizeitparks & Erlebnisse",
+    "description": "Freizeitparks, Erlebnisgutscheine, Ausflüge, Abenteuer",
+    "icon": "🎢",
+    "isPublic": true
+  },
+  {
+    "name": "Tanzen",
+    "description": "Tanzen, Tanzkurse, Tanzschuhe, Events",
+    "icon": "💃",
+    "isPublic": true
+  },
+  {
+    "name": "Mode & Accessoires",
+    "description": "Kleidung, Accessoires, Taschen, Style, Fashion",
+    "icon": "👗",
+    "isPublic": true
+  },
+  {
+    "name": "Wellness & Entspannung",
+    "description": "Spa, Massage, Entspannung, Self‑Care, Sauna",
+    "icon": "🧖",
+    "isPublic": true
+  },
+  {
+    "name": "Beauty & Pflege",
+    "description": "Kosmetik, Pflege, Make‑up, Düfte, Skincare",
+    "icon": "💄",
+    "isPublic": true
+  },
+  {
+    "name": "Kreativität & DIY",
+    "description": "Basteln, Malen, Handarbeiten, DIY‑Projekte, Kreativsets",
+    "icon": "🎨",
+    "isPublic": true
+  },
+  {
+    "name": "Kunst & Design",
+    "description": "Kunst lieben, Ausstellungen, Design, Deko‑Objekte, Prints",
+    "icon": "🖼️",
+    "isPublic": true
+  },
+  {
+    "name": "Handwerk",
+    "description": "Werkzeug, Heimwerken, Reparaturen, Holz/Metall, Projekte",
+    "icon": "🔨",
+    "isPublic": true
+  },
+  {
+    "name": "Garten & Pflanzen",
+    "description": "Pflanzen, Garten, Indoor‑Jungle, Pflege, Deko",
+    "icon": "🌱",
+    "isPublic": true
+  },
+  {
+    "name": "Haustiere",
+    "description": "Tierbedarf, Spielzeug, Futter, Haustier‑Zubehör",
+    "icon": "🐾",
+    "isPublic": true
+  },
+  {
+    "name": "Filme & Serien",
+    "description": "Streaming, Kino, Serien, Filmabende, Merchandise",
+    "icon": "🎬",
+    "isPublic": true
+  },
+  {
+    "name": "Fotografie",
+    "description": "Kameras, Objektive, Foto‑Zubehör, Foto‑Workshops",
+    "icon": "📷",
+    "isPublic": true
+  },
+  {
+    "name": "Fotoprodukte (Fotobuch, Prints, Rahmen)",
+    "description": "Fotobücher, Prints, Rahmen, Alben, personalisierte Foto‑Geschenke",
+    "icon": "🖨️",
+    "isPublic": true
+  },
+  {
+    "name": "Autos",
+    "description": "Autozubehör, Pflege, Tools, Fahrspaß, Car‑Gadgets",
+    "icon": "🚗",
+    "isPublic": true
+  },
+  {
+    "name": "Motorräder",
+    "description": "Motorrad‑Zubehör, Ausrüstung, Pflege, Touren",
+    "icon": "🏍️",
+    "isPublic": true
+  },
+  {
+    "name": "Schmuck & Uhren",
+    "description": "Schmuck, Uhren, Accessoires, Pflege, Gravuren",
+    "icon": "💍",
+    "isPublic": true
+  },
+  {
+    "name": "Wohnen & Deko",
+    "description": "Einrichtung, Deko, Home‑Accessoires, Haushaltshelfer",
+    "icon": "🏠",
+    "isPublic": true
+  },
+  {
+    "name": "Spiritualität",
+    "description": "Meditation, Achtsamkeit, Yoga, Rituale, Räuchern",
+    "icon": "🧘",
+    "isPublic": true
+  },
+  {
+    "name": "Genuss (Food, Wein, Feinkost)",
+    "description": "Food, Wein, Feinkost, Tasting, Delikatessen, Genussmomente",
+    "icon": "🍷",
+    "isPublic": true
+  }
+]

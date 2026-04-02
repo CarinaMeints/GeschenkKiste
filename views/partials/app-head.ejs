@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= (typeof title !== 'undefined' && title) ? title : 'GeschenkKiste' %></title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+
+<body class="min-h-screen">
+  <% if (!locals.hideNav) { %>
+    <%- include('./nav') %>
+  <% } %>
+
+  <main class="app-page">
+  <% if (!locals.hideFlash) { %>
+    <%- include('./flash') %>
+  <% } %>

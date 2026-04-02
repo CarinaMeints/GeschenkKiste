@@ -1,0 +1,110 @@
+<%- include('../partials/app-head', { title: 'Event geteilt – GeschenkKiste', hideNav: true, hideFlash: true }) %>
+
+<%
+  const assignmentCount = (assignments || []).length;
+  let giftState = 'no_gift';
+  if (event.status === 'abgeschlossen') giftState = 'done';
+  else if (assignmentCount > 0) giftState = 'planning';
+
+  function badgeClass(state) {
+    if (state === 'done') return 'badge badge-done';
+    if (state === 'planning') return 'badge badge-planning';
+    return 'badge badge-no-gift';
+  }
+%>
+
+<div class="mb-6">
+  <a href="/" class="app-link">← Startseite</a>
+  <p class="text-xs">
+    Erstellt mit GeschenkKiste.
+  </p>
+</div>
+
+<section class="app-panel mb-6">
+  <div class="app-panel-header">
+    <h1 class="app-panel-title">
+      🎁 <%= event.personOccasion.occasion.name %> – <%= event.personOccasion.person.name %>
+    </h1>
+    <span class="<%= badgeClass(giftState) %>">
+      <%= giftState === 'done' ? 'abgeschlossen' : (giftState === 'planning' ? 'in Planung' : 'kein Geschenk') %>
+    </span>
+  </div>
+
+  <div class="app-panel-body">
+    <p class="text-white/80 text-sm">
+      📅 <%= new Date(event.date).toLocaleDateString('de-DE') %> · Jahr <%= event.year %>
+    </p>
+
+    <div class="mt-4">
+      <p class="text-sm font-semibold text-white mb-2">Interessen</p>
+
+      <div class="app-filter">
+        <% (event.personOccasion.person.interests || []).forEach(i => { %>
+        <span class="app-filter-chip"><%= i.icon %> <%= i.name %></span>
+        <% }) %>
+
+        <% (inferredInterests || []).forEach(i => { %>
+        <span class="app-filter-chip app-filter-chip-inferred">
+          <%= i.icon %> <%= i.name %> <span class="text-xs opacity-60">(abgeleitet)</span>
+        </span><% }) %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="app-panel mb-6">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">💡 Geschenkideen / Zuordnungen</h2>
+    <span class="app-panel-count"><%= assignmentCount %></span>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (!assignments || assignments.length === 0) { %>
+    <p class="text-sm text-white/80">Noch keine Geschenke zugeordnet.</p>
+    <% } else { %>
+    <div class="space-y-3">
+      <% assignments.forEach(a => { %>
+      <div class="app-item">
+        <div class="flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <div class="font-semibold text-white truncate"><%= a.gift?.title || '–' %></div>
+            <% if (a.notes) { %>
+            <div class="text-xs text-white/80 mt-1">💬 <%= a.notes %></div>
+            <% } %>
+          </div>
+          <span class="badge <%= a.status === 'fertig' ? 'badge-done' : 'badge-planning' %>">
+            <%= a.status %>
+          </span>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">🎁 Historie (fertig verschenkt)</h2>
+    <span class="app-panel-count"><%= (giftHistory || []).length %></span>
+  </div>
+  <div class="app-panel-body">
+    <% if (!giftHistory || giftHistory.length === 0) { %>
+    <p class="text-sm text-white/80">Keine Historie vorhanden.</p>
+    <% } else { %>
+    <div class="space-y-3">
+      <% giftHistory.slice(0, 10).forEach(item => { %>
+      <div class="app-item">
+        <div class="font-semibold text-white"><%= item.gift?.title || 'Geschenk' %></div>
+        <div class="text-xs text-white/80 mt-1">
+          <%= item.event?.personOccasion?.occasion?.name || 'Anlass' %> ·
+          <%= item.event?.date ? new Date(item.event.date).toLocaleDateString('de-DE') : '' %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/app-foot') %>

@@ -1,0 +1,104 @@
+<%- include('../partials/app-head', { title: 'Events – GeschenkKiste' }) %>
+
+<div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-8">
+  <div>
+    <h1 class="app-h1">🎉 Events</h1>
+    <p class="app-subtle mt-1">
+      Zeithorizont: <span class="font-semibold"><%= months %> Monate</span>
+      · <a href="/settings" class="app-link">ändern</a>
+    </p>
+  </div>
+
+  <div class="flex flex-wrap gap-2">
+    <a href="/events/calendar" class="btn-surface">📅 Kalenderansicht</a>
+  </div>
+</div>
+
+<%
+  function formatDateShort(date) {
+    return new Date(date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  function daysText(d) {
+    if (d == null) return '';
+    if (d === 0) return 'heute';
+    if (d === 1) return 'morgen';
+    if (d < 0) return `vor ${Math.abs(d)} Tagen`;
+    return `in ${d} Tagen`;
+  }
+
+  function badgeClass(state) {
+    if (state === 'done') return 'badge badge-done';
+    if (state === 'planning') return 'badge badge-planning';
+    return 'badge badge-no-gift';
+  }
+
+  function badgeLabel(state) {
+    if (state === 'done') return 'abgeschlossen';
+    if (state === 'planning') return 'in Planung';
+    return 'kein Geschenk';
+  }
+
+  function chipClass(key) {
+    return (filter === key)
+      ? 'app-filter-chip-surface app-filter-chip-surface-active'
+      : 'app-filter-chip-surface';
+  }
+
+  const baseReturnTo = '/events' + (filter && filter !== 'all' ? `?filter=${filter}` : '');
+%>
+
+<div class="app-filter mb-6">
+  <a href="/events?filter=all" class="<%= chipClass('all') %>">alle (<%= counts.all %>)</a>
+  <a href="/events?filter=open" class="<%= chipClass('open') %>">offen (<%= counts.open %>)</a>
+  <a href="/events?filter=no_gift" class="<%= chipClass('no_gift') %>">kein Geschenk (<%= counts.no_gift %>)</a>
+  <a href="/events?filter=planning" class="<%= chipClass('planning') %>">in Planung (<%= counts.planning %>)</a>
+  <a href="/events?filter=done" class="<%= chipClass('done') %>">abgeschlossen (<%= counts.done %>)</a>
+</div>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">📋 Events im Zeithorizont</h2>
+    <span class="app-panel-count"><%= (events || []).length %></span>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (!events || events.length === 0) { %>
+    <p class="text-sm text-white/80">Keine Events in diesem Filter.</p>
+    <% } else { %>
+    <div class="space-y-3">
+      <% events.forEach(e => { %>
+      <div class="app-item">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <a href="/events/<%= e._id %>?returnTo=<%= encodeURIComponent(baseReturnTo) %>" class="app-item-title">
+              <%= e.personOccasion.occasion.icon %>
+              <%= e.personOccasion.occasion.name %> – <%= e.personOccasion.person.name %>
+            </a>
+
+            <p class="app-item-meta">
+              <%= formatDateShort(e.date) %> · <%= daysText(e.daysUntil) %>
+              <% if (e.giftState === 'planning') { %>
+              · <%= e.assignmentCount %> Idee(n)
+              <% } %>
+            </p>
+
+            <a href="/persons/<%= e.personOccasion.person._id %>" class="app-item-sub-link">
+              zur Person →
+            </a>
+          </div>
+
+          <div class="flex items-center gap-3 shrink-0">
+            <span class="<%= badgeClass(e.giftState) %>"><%= badgeLabel(e.giftState) %></span>
+
+            <input type="checkbox" title="Event abschließen" class="check-on-blue js-complete-event" data-event-id="<%= e._id %>" data-return-to="<%= baseReturnTo %>" <%= e.giftState === 'done' ? 'checked disabled' : '' %>>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/app-foot') %>

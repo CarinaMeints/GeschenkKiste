@@ -1,0 +1,58 @@
+<%- include('../partials/app-head', { title: 'Registrieren – GeschenkKiste', hideFlash: true }) %>
+
+<div class="min-h-[70vh] flex items-center justify-center px-4 py-10">
+  <section class="app-panel w-full max-w-md">
+    <div class="app-panel-header">
+      <div class="flex items-center gap-3">
+        <h1 class="app-panel-title">Registrieren</h1>
+      </div>
+      <a href="/" class="app-panel-link text-sm">Startseite →</a>
+    </div>
+
+    <div class="app-panel-body">
+      <p class="text-white/80 text-sm mb-4">
+        Erstelle deinen Account für die GeschenkKiste.
+      </p>
+
+      <%- include('../partials/flash') %>
+
+      <form action="/register" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-white font-semibold mb-2">Username</label>
+          <input type="text" name="username" required minlength="3" autocomplete="username" autocapitalize="none" spellcheck="false" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900
+                   border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/40" placeholder="deinname">
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold mb-2">E-Mail</label>
+          <input type="email" name="email" required autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900
+                   border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/40" placeholder="deine@email.de">
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold mb-2">Passwort</label>
+          <input type="password" name="password" required minlength="6" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900
+                   border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/40" placeholder="••••••••">
+          <p class="text-xs text-white/70 mt-1">Mindestens 6 Zeichen</p>
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold mb-2">Passwort bestätigen</label>
+          <input type="password" name="passwordConfirm" required minlength="6" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900
+                   border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/40" placeholder="••••••••">
+        </div>
+
+        <button type="submit" class="btn-primary w-full py-3">
+          Registrieren
+        </button>
+
+        <div class="pt-2 text-center text-sm text-white/90">
+          Bereits einen Account?
+          <a href="/login" class="app-link-on-dark">Login</a>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/app-foot') %>

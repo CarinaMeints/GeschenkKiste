@@ -1,0 +1,102 @@
+<%- include('../partials/app-head', { title: 'Geschenke-Katalog – GeschenkKiste' }) %>
+
+<%
+  const currentUserId =
+    (typeof currentUser !== 'undefined' && currentUser && (currentUser._id || currentUser.id))
+      ? String(currentUser._id || currentUser.id)
+      : null;
+
+  function isOwner(doc) {
+    const owner = doc?.createdBy?._id ? doc.createdBy._id : doc?.createdBy;
+    return !!(currentUserId && owner && String(owner) === currentUserId);
+  }
+
+  function bestImageUrl(g) {
+    const imgs = Array.isArray(g?.images) ? g.images : [];
+    const primary = imgs.find(x => x && x.isPrimary);
+    const first = imgs[0];
+    return (primary && primary.url) ? primary.url : (first && first.url ? first.url : '');
+  }
+%>
+
+<div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-8">
+  <div>
+    <h1 class="app-h1">🎁 Geschenke-Katalog</h1>
+  </div>
+
+  <a href="/gifts/new" class="btn-surface">➕ Neues Geschenk</a>
+</div>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Liste</h2>
+    <span class="app-panel-count"><%= (gifts || []).length %></span>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (!gifts || gifts.length === 0) { %>
+    <div class="app-item text-center">
+      <div class="text-6xl mb-3">🎁</div>
+      <p class="text-sm text-white/80">Noch keine Geschenke im Katalog.</p>
+      <div class="mt-4">
+        <a href="/gifts/new" class="btn-surface">➕ Jetzt erstes Geschenk anlegen</a>
+      </div>
+    </div>
+    <% } else { %>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      <% gifts.forEach(gift => { 
+             const canEdit = !gift.isPublic && isOwner(gift);
+             const imgUrl = bestImageUrl(gift);
+        %>
+
+      <div class="app-item">
+        <div class="flex items-start justify-between gap-3">
+          <a href="/gifts/<%= gift._id %>" class="min-w-0 block">
+            <div class="flex items-start gap-3">
+              <% if (imgUrl) { %>
+              <img src="<%= imgUrl %>" alt="<%= gift.title %>" class="w-14 h-14 rounded-lg object-cover border border-white/20 bg-white/10">
+              <% } else { %>
+              <div class="w-14 h-14 rounded-lg border border-white/20 bg-white/10 flex items-center justify-center text-white/80 font-bold">
+                🎁
+              </div>
+              <% } %>
+
+              <div class="min-w-0">
+                <div class="font-semibold text-white truncate"><%= gift.title %></div>
+
+                <div class="text-xs text-white/80 mt-1">
+                  <%= (gift.usageCount || 0) %>× verwendet
+                  <% if (gift.isPublic) { %> · 🌍 Katalog <% } %>
+                </div>
+
+                <% if (gift.interests && gift.interests.length > 0) { %>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  <% gift.interests.slice(0, 3).forEach(i => { %>
+                  <span class="app-filter-chip"><%= i.icon %> <%= i.name %></span>
+                  <% }) %>
+                  <% if (gift.interests.length > 3) { %>
+                  <span class="app-filter-chip">+<%= gift.interests.length - 3 %></span>
+                  <% } %>
+                </div>
+                <% } %>
+              </div>
+            </div>
+          </a>
+
+          <div class="shrink-0 flex flex-col gap-2">
+            <% if (canEdit) { %>
+            <a href="/gifts/<%= gift._id %>/edit" class="btn-surface" title="Bearbeiten">✏️</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <% }) %>
+    </div>
+
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/app-foot') %>

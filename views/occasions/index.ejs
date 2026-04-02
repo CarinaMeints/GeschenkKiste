@@ -1,0 +1,84 @@
+<%- include('../partials/app-head', { title: 'Anlässe – GeschenkKiste' }) %>
+
+<%
+  const currentUserId = (currentUser && (currentUser._id || currentUser.id))
+    ? String(currentUser._id || currentUser.id)
+    : null;
+
+  function canEditOccasion(o) {
+    if (!o) return false;
+    if (o.isPublic === true) return false;
+    if (!currentUserId) return false;
+    if (!o.createdBy) return false;
+    return String(o.createdBy) === currentUserId;
+  }
+
+  const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+
+  function fixedDateText(o) {
+    if (o.day == null || o.month == null) return 'beweglich';
+    return `${o.day}. ${months[(o.month || 1) - 1]}`;
+  }
+%>
+
+<div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-8">
+  <div>
+    <h1 class="app-h1">🎉 Anlässe</h1>
+    <p class="app-subtle mt-1">Verwalte Anlässe für Events</p>
+  </div>
+
+  <a href="/occasions/new" class="btn-surface">➕ Neuer Anlass</a>
+</div>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Liste</h2>
+    <span class="app-panel-count"><%= (occasions || []).length %></span>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (!occasions || occasions.length === 0) { %>
+      <div class="app-item text-center">
+        <div class="text-6xl mb-3">🎉</div>
+        <p class="text-sm text-white/80">Noch keine Anlässe vorhanden.</p>
+        <div class="mt-4">
+          <a href="/occasions/new" class="btn-surface">Jetzt anlegen →</a>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <% occasions.forEach(o => { 
+             const editable = canEditOccasion(o);
+        %>
+          <div class="app-item">
+            <div class="flex items-start justify-between gap-3">
+              <a href="/occasions/<%= o._id %>" class="min-w-0 block">
+                <div class="text-4xl mb-2"><%= o.icon || '🎉' %></div>
+                <div class="font-semibold text-white truncate"><%= o.name %></div>
+
+                <% if (o.description) { %>
+                  <div class="text-xs text-white/80 mt-1 line-clamp-2"><%= o.description %></div>
+                <% } else { %>
+                  <div class="text-xs text-white/70 mt-1">Keine Beschreibung</div>
+                <% } %>
+
+                <div class="text-xs text-white/80 font-semibold mt-3">
+                  📅 <%= fixedDateText(o) %> · <%= o.isRecurring ? '🔁 jährlich' : '⏺️ einmalig' %>
+                  · <%= o.isPublic ? '🌍 Katalog' : 'Eigener Anlass' %>
+                </div>
+              </a>
+
+              <div class="shrink-0 flex flex-col gap-2">
+                <% if (editable) { %>
+                  <a href="/occasions/<%= o._id %>/edit" class="btn-surface" title="Bearbeiten">✏️</a>
+                <% } %>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/app-foot') %>

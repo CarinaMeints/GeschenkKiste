@@ -1,0 +1,45 @@
+<%- include('../partials/app-head', { title: 'Login – GeschenkKiste', hideFlash: true }) %>
+
+<div class="min-h-[70vh] flex items-center justify-center px-4 py-10">
+  <section class="app-panel w-full max-w-md">
+    <div class="app-panel-header">
+      <div class="flex items-center gap-3">
+        <h1 class="app-panel-title">Login</h1>
+      </div>
+      <a href="/" class="app-panel-link text-sm">Startseite →</a>
+    </div>
+
+    <div class="app-panel-body">
+      <p class="text-white/80 text-sm mb-4">
+        Melde dich an, um deine GeschenkKiste zu öffnen.
+      </p>
+
+      <%- include('../partials/flash') %>
+
+      <form action="/login" method="POST" class="space-y-4">
+        <div>
+          <label class="block text-white font-semibold mb-2">E-Mail</label>
+          <input type="email" name="email" required autocomplete="email" inputmode="email" autocapitalize="none" spellcheck="false" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900
+                   border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/40" placeholder="deine@email.de">
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold mb-2">Passwort</label>
+          <input type="password" name="password" required minlength="6" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900
+                   border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/40" placeholder="••••••••">
+        </div>
+
+        <button type="submit" class="btn-primary w-full py-3">
+          Einloggen
+        </button>
+
+        <div class="pt-2 text-center text-sm text-white/90">
+          Noch kein Account?
+          <a href="/register" class="app-link-on-dark">Registrieren</a>
+        </div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<%- include('../partials/app-foot') %>

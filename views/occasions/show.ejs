@@ -1,0 +1,298 @@
+<%- include('../partials/app-head', { title: `${occasion.name} – Anlass – GeschenkKiste` }) %>
+
+<%
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+  function formatDateShort(date) {
+    return new Date(date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  function daysText(d) {
+    if (d == null) return '';
+    if (d === 0) return 'heute';
+    if (d === 1) return 'morgen';
+    if (d < 0) return `vor ${Math.abs(d)} Tagen`;
+    return `in ${d} Tagen`;
+  }
+
+  function badgeClass(state) {
+    if (state === 'done') return 'badge badge-done';
+    if (state === 'planning') return 'badge badge-planning';
+    return 'badge badge-no-gift';
+  }
+
+  function badgeLabel(state) {
+    if (state === 'done') return 'abgeschlossen';
+    if (state === 'planning') return 'in Planung';
+    return 'kein Geschenk';
+  }
+
+  const hasFixedDate = (occasion.day != null && occasion.month != null);
+  const isBirthday = occasion.isBirthday === true;
+  const isMovable = !hasFixedDate && !isBirthday;
+
+  const fixedDateText = hasFixedDate
+    ? `${occasion.day}. ${months[(occasion.month || 1) - 1]}`
+    : 'beweglich';
+
+  const returnToOccasion = '/occasions/' + occasion._id;
+
+  function personOccasionDateText(po) {
+    if (hasFixedDate) return fixedDateText;
+
+    if (isBirthday) {
+      const p = po.person;
+      if (p && p.birthdayDay && p.birthdayMonth) {
+        return `${p.birthdayDay}. ${months[(p.birthdayMonth || 1) - 1]} (automatisch)`;
+      }
+      return 'Geburtstag fehlt';
+    }
+
+    if (po.customDay && po.customMonth && po.customYear) {
+      return `${po.customDay}. ${months[(po.customMonth || 1) - 1]} (${po.customYear})`;
+    }
+
+    return 'Datum fehlt';
+  }
+%>
+
+<div class="mb-6">
+  <a href="/occasions" class="app-link">← zu allen Anlässen</a>
+</div>
+
+<section class="app-panel mb-8">
+  <div class="app-panel-header">
+    <div class="min-w-0">
+      <h1 class="app-panel-title truncate">
+        <%= occasion.icon || '🎉' %> <%= occasion.name %>
+      </h1>
+      <p class="text-xs text-white/80 mt-1 font-semibold">
+        <%= occasion.isPublic ? '🌍 Katalog' : 'Eigener Anlass' %>
+        <% if (occasion.isBirthday) { %> · 🎂 Geburtstag-Anlass <% } %>
+      </p>
+    </div>
+
+    <div class="flex gap-2 shrink-0">
+      <% if (canEdit) { %>
+      <a href="/occasions/<%= occasion._id %>/edit" class="btn-surface">✏️ Bearbeiten</a>
+
+      <form action="/occasions/<%= occasion._id %>" method="POST" data-dc-confirm data-dc-title="Anlass wirklich löschen?" data-dc-message="Möchtest du den Anlass „<%= occasion.name %>“ wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden." data-dc-ok="Ja, löschen">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn-surface" style="border-color:#fecaca;color:#b91c1c;">
+          🗑️
+        </button>
+      </form>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (occasion.description) { %>
+    <div class="app-item mb-4">
+      <p class="text-sm font-semibold text-white mb-1">Beschreibung</p>
+      <p class="text-sm text-white/90"><%= occasion.description %></p>
+    </div>
+    <% } %>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div class="app-item">
+        <p class="text-sm font-semibold text-white">📅 Datum</p>
+        <p class="text-sm text-white/90 mt-1"><%= fixedDateText %></p>
+      </div>
+
+      <div class="app-item">
+        <p class="text-sm font-semibold text-white">🔁 Wiederkehrend</p>
+        <p class="text-sm text-white/90 mt-1"><%= occasion.isRecurring ? 'ja (jährlich)' : 'nein (einmalig)' %></p>
+      </div>
+
+      <div class="app-item">
+        <p class="text-sm font-semibold text-white">🌍 Sichtbarkeit</p>
+        <p class="text-sm text-white/90 mt-1"><%= occasion.isPublic ? 'Katalog' : 'privat' %></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+  <section class="app-panel">
+    <div class="app-panel-header">
+      <h2 class="app-panel-title">👥 Personen</h2>
+      <span class="app-panel-count"><%= personOccasionCount || 0 %></span>
+    </div>
+
+    <div class="app-panel-body">
+
+      <details class="app-item mb-4" <%= (!personOccasions || personOccasions.length === 0) ? 'open' : '' %>>
+        <summary class="cursor-pointer flex items-center justify-between gap-3">
+          <div class="font-semibold text-white">
+            ➕ Personen zuordnen
+          </div>
+          <span class="details-arrow"></span>
+        </summary>
+
+        <div class="mt-4 pt-3 border-t border-white/15">
+          <form action="/occasions/<%= occasion._id %>/people" method="POST" class="space-y-3">
+            <input type="hidden" name="_method" value="PATCH">
+
+            <% if (!personsAll || personsAll.length === 0) { %>
+            <p class="text-sm text-white/80">Du hast noch keine Personen angelegt.</p>
+            <a href="/persons/new" class="btn-surface">➕ Neue Person</a>
+            <% } else { %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 border border-white/15 rounded-lg p-3 bg-white/10 max-h-80 overflow-y-auto">
+              <% personsAll.forEach(p => { 
+                     const checked = assignedPersonIds && assignedPersonIds.has(String(p._id));
+                %>
+              <label class="flex items-center gap-2 p-2 rounded hover:bg-white/10 transition cursor-pointer">
+                <input type="checkbox" name="personIds" value="<%= p._id %>" class="check-on-blue" <%= checked ? 'checked' : '' %>>
+                <span class="text-sm font-semibold text-white"><%= p.name %></span>
+              </label>
+              <% }) %>
+            </div>
+
+            <p class="text-xs text-white/80">
+              Abwählen entfernt die Zuordnung inkl. Events/Zuordnungen/Tasks für diesen Anlass.
+            </p>
+
+            <button type="submit" class="btn-primary w-full">
+              Speichern
+            </button>
+            <% } %>
+          </form>
+        </div>
+      </details>
+
+      <% if (!personOccasions || personOccasions.length === 0) { %>
+      <p class="text-sm text-white/80">Noch keine Personen zugeordnet.</p>
+      <% } else { %>
+      <div class="space-y-3">
+        <% personOccasions.forEach(po => { %>
+        <div class="app-item">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <a href="/persons/<%= po.person?._id %>" class="app-item-title">
+                👤 <%= po.person?.name || 'Person' %>
+              </a>
+
+              <div class="text-xs text-white/80 mt-1">
+                📅 <%= personOccasionDateText(po) %>
+              </div>
+
+              <div class="text-xs text-white/80 mt-1">
+                gültig: ab <%= po.startYear %> · <%= po.endYear ? ('bis ' + po.endYear) : 'unbegrenzt' %>
+              </div>
+
+              <% if (po.notes) { %>
+              <div class="text-xs text-white/80 mt-1">📝 <%= po.notes %></div>
+              <% } %>
+
+              <% if (isMovable && (!po.customDay || !po.customMonth || !po.customYear)) { %>
+              <div class="mt-2">
+                <a class="app-item-sub-link" href="/persons/<%= po.person?._id %>/occasions/<%= po._id %>/date?year=<%= new Date().getFullYear() %>">
+                  Datum setzen →
+                </a>
+              </div>
+              <% } %>
+
+              <details class="mt-3">
+                <summary class="app-item-sub-link cursor-pointer">
+                  Zeitraum / Notiz bearbeiten ▾
+                </summary>
+
+                <div class="mt-3 p-3 rounded-lg border border-white/15 bg-white/10">
+                  <form action="/persons/<%= po.person?._id %>/occasions/<%= po._id %>?returnTo=<%= encodeURIComponent(returnToOccasion) %>" method="POST" class="space-y-3">
+                    <input type="hidden" name="_method" value="PATCH">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div>
+                        <label class="block text-xs text-white/80 font-semibold mb-1">Startjahr *</label>
+                        <input type="number" name="startYear" min="2000" max="2100" required value="<%= po.startYear || new Date().getFullYear() %>" class="w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+                      </div>
+
+                      <div>
+                        <label class="block text-xs text-white/80 font-semibold mb-1">Endjahr (optional)</label>
+                        <input type="number" name="endYear" min="2000" max="2100" value="<%= po.endYear || '' %>" placeholder="leer = unbegrenzt" class="w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+                      </div>
+                    </div>
+
+                    <div>
+                      <label class="block text-xs text-white/80 font-semibold mb-1">Notiz (optional)</label>
+                      <input type="text" name="notes" value="<%= po.notes || '' %>" class="w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20" placeholder="z.B. gilt erst ab …">
+                    </div>
+
+                    <div class="flex justify-end">
+                      <button type="submit" class="btn-surface text-xs">Speichern</button>
+                    </div>
+                  </form>
+                </div>
+              </details>
+            </div>
+
+            <div class="flex flex-col items-end gap-2 shrink-0">
+              <a href="/persons/<%= po.person?._id %>/occasions" class="app-item-sub-link">
+                Anlässe →
+              </a>
+
+              <form action="/persons/<%= po.person?._id %>/occasions/<%= po._id %>?returnTo=<%= encodeURIComponent(returnToOccasion) %>" method="POST" data-dc-confirm data-dc-title="Anlass entfernen?" data-dc-message="Möchtest du den Anlass „<%= occasion.name %>“ wirklich von „<%= po.person?.name %>“ entfernen? Zugehörige Events und Geschenk-Zuordnungen werden dabei gelöscht." data-dc-ok="Ja, entfernen">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit" class="btn-surface" style="border-color:#fecaca;color:#b91c1c;">
+                  Entfernen
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+
+    </div>
+  </section>
+
+  <section class="app-panel">
+    <div class="app-panel-header">
+      <div>
+        <h2 class="app-panel-title">📅 Anstehende Events</h2>
+        <p class="text-xs text-white/80 font-semibold">Zeithorizont: <%= horizonMonths %> Monate</p>
+      </div>
+      <span class="app-panel-count"><%= (upcomingEvents || []).length %></span>
+    </div>
+
+    <div class="app-panel-body">
+      <% if (!upcomingEvents || upcomingEvents.length === 0) { %>
+      <p class="text-sm text-white/80">Keine Events im aktuellen Zeithorizont.</p>
+      <% } else { %>
+      <div class="space-y-3">
+        <% upcomingEvents.forEach(ev => { %>
+        <div class="app-item">
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <a href="/events/<%= ev._id %>?returnTo=<%= encodeURIComponent(returnToOccasion) %>" class="app-item-title">
+                <%= ev.personOccasion?.occasion?.icon || '🎉' %>
+                <%= ev.personOccasion?.occasion?.name || 'Event' %> –
+                <%= ev.personOccasion?.person?.name || 'Person' %>
+              </a>
+
+              <p class="app-item-meta">
+                <%= formatDateShort(ev.date) %> · <%= daysText(ev.daysUntil) %>
+                <% if (ev.giftState === 'planning') { %>
+                · <%= ev.assignmentCount %> Idee(n)
+                <% } %>
+              </p>
+            </div>
+
+            <span class="<%= badgeClass(ev.giftState) %>"><%= badgeLabel(ev.giftState) %></span>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </section>
+
+</div>
+
+<%- include('../partials/delete-confirm.ejs') %>
+<script src="/js/delete-confirm.js" defer></script>
+
+<%- include('../partials/app-foot') %>

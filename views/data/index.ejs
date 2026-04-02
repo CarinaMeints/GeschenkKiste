@@ -1,0 +1,458 @@
+<%- include('../partials/app-head', { title: 'Datenübersicht – GeschenkKiste', hideFlash: true }) %>
+
+<div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-6">
+  <div>
+    <h1 class="app-h1">📊 Vollständige Datenübersicht</h1>
+    <p class="app-subtle mt-1">Alle deine Daten auf einen Blick</p>
+  </div>
+
+  <%- include('../partials/flash') %>
+</div>
+
+<%
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+  const personsArr = data.persons || [];
+  const occasionsArr = data.occasions || [];
+  const giftsArr = data.gifts || [];
+  const interestsArr = data.interests || [];
+
+  const yearsSet = new Set();
+  for (const p of personsArr) {
+    for (const ev of (p.events || [])) {
+      if (ev && ev.year) yearsSet.add(String(ev.year));
+    }
+  }
+  const years = Array.from(yearsSet).sort();
+
+  function isoDate(d) {
+    const x = new Date(d);
+    const yyyy = x.getFullYear();
+    const mm = String(x.getMonth() + 1).padStart(2, '0');
+    const dd = String(x.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
+  function giftIdsForEvent(ev) {
+    const ids = new Set();
+    for (const a of (ev.assignments || [])) {
+      const gid = a?.gift?._id ? String(a.gift._id) : null;
+      if (gid) ids.add(gid);
+    }
+    return Array.from(ids);
+  }
+
+  function interestIdsForEvent(ev) {
+    const ids = new Set();
+    for (const a of (ev.assignments || [])) {
+      const ints = a?.gift?.interests || [];
+      for (const i of ints) {
+        const iid = i?._id ? String(i._id) : (i ? String(i) : null);
+        if (iid) ids.add(iid);
+      }
+    }
+    return Array.from(ids);
+  }
+%>
+
+<section class="app-panel mb-6" data-export-filters>
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">🔎 Filter</h2>
+
+    <div class="flex gap-2">
+      <button type="button" class="btn-surface" data-export-reset title="Reset">↺</button>
+      <button type="button" class="btn-surface" data-export-expand title="Alles ausklappen">Alles ausklappen</button>
+      <button type="button" class="btn-surface" data-export-collapse title="Alles einklappen">Alles einklappen</button>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div>
+        <label class="block text-white font-semibold mb-1">Person</label>
+        <select class="w-full px-3 py-2 rounded-lg bg-white text-slate-900 border border-white/20" data-export-person>
+          <option value="">alle</option>
+          <% personsArr.forEach(p => { %>
+          <option value="<%= p._id %>"><%= p.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-1">Anlass</label>
+        <select class="w-full px-3 py-2 rounded-lg bg-white text-slate-900 border border-white/20" data-export-occasion>
+          <option value="">alle</option>
+          <% occasionsArr.forEach(o => { %>
+          <option value="<%= o._id %>"><%= o.icon %> <%= o.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-1">Interesse</label>
+        <select class="w-full px-3 py-2 rounded-lg bg-white text-slate-900 border border-white/20" data-export-interest>
+          <option value="">alle</option>
+          <% interestsArr.forEach(i => { %>
+          <option value="<%= i._id %>"><%= i.icon %> <%= i.name %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-1">Geschenk</label>
+        <select class="w-full px-3 py-2 rounded-lg bg-white text-slate-900 border border-white/20" data-export-gift>
+          <option value="">alle</option>
+          <% giftsArr.forEach(g => { %>
+          <option value="<%= g._id %>"><%= g.title %></option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-1">Status</label>
+        <select class="w-full px-3 py-2 rounded-lg bg-white text-slate-900 border border-white/20" data-export-status>
+          <option value="">alle</option>
+          <option value="offen">offen</option>
+          <option value="in_planung">in Planung</option>
+          <option value="abgeschlossen">abgeschlossen</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-1">Zeitraum</label>
+        <select class="w-full px-3 py-2 rounded-lg bg-white text-slate-900 border border-white/20" data-export-time>
+          <option value="all">alles</option>
+          <option value="year">nur Jahr…</option>
+          <option value="next6">nächste 6 Monate</option>
+        </select>
+
+        <select class="mt-2 w-full px-3 py-2 rounded-lg bg-white text-slate-900 border border-white/20 hidden" data-export-year>
+          <option value="">Jahr wählen…</option>
+          <% years.forEach(y => { %>
+          <option value="<%= y %>"><%= y %></option>
+          <% }) %>
+        </select>
+      </div>
+    </div>
+
+    <div class="mt-4 flex flex-wrap gap-3 text-sm text-white/90">
+      <label class="inline-flex items-center gap-2 cursor-pointer" title="Sektion anzeigen/ausblenden">
+        <input type="checkbox" checked data-export-toggle-persons>
+        👥 Personen
+      </label>
+      <label class="inline-flex items-center gap-2 cursor-pointer" title="Sektion anzeigen/ausblenden">
+        <input type="checkbox" checked data-export-toggle-gifts>
+        🎁 Geschenke
+      </label>
+      <label class="inline-flex items-center gap-2 cursor-pointer" title="Sektion anzeigen/ausblenden">
+        <input type="checkbox" checked data-export-toggle-occasions>
+        🎉 Anlässe
+      </label>
+    </div>
+  </div>
+</section>
+
+<section class="app-panel mb-6">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">📈 Statistik</h2>
+  </div>
+
+  <div class="app-panel-body">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="app-item text-center">
+        <div class="text-4xl font-extrabold text-white"><%= personsArr.length %></div>
+        <div class="text-xs text-white/80 font-semibold mt-1">Personen</div>
+      </div>
+
+      <div class="app-item text-center">
+        <div class="text-4xl font-extrabold text-white"><%= data.totalEvents %></div>
+        <div class="text-xs text-white/80 font-semibold mt-1">Events</div>
+      </div>
+
+      <div class="app-item text-center">
+        <div class="text-4xl font-extrabold text-white"><%= giftsArr.length %></div>
+        <div class="text-xs text-white/80 font-semibold mt-1">Geschenke</div>
+      </div>
+
+      <div class="app-item text-center">
+        <div class="text-4xl font-extrabold text-white"><%= data.totalAssignments %></div>
+        <div class="text-xs text-white/80 font-semibold mt-1">Zuordnungen</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<details open class="app-panel mb-6" data-export-details data-export-section="persons">
+  <summary class="app-panel-header cursor-pointer">
+    <div class="flex items-center gap-3">
+      <span class="details-arrow"></span>
+      <h2 class="app-panel-title">👥 Personen</h2>
+    </div>
+    <span class="app-panel-count"><%= personsArr.length %></span>
+  </summary>
+
+  <div class="app-panel-body">
+    <% personsArr.forEach(person => { %>
+    <details open class="app-item mb-3" data-export-details data-export-person-block data-person-id="<%= person._id %>">
+      <summary class="cursor-pointer flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="details-arrow"></span>
+          <div class="min-w-0">
+            <div class="font-semibold text-white truncate"><%= person.name %></div>
+            <div class="text-xs text-white/80">
+              <% if (person.hasBirthday) { %>
+              🎂 <%= person.birthdayDay %>. <%= months[(person.birthdayMonth || 1) - 1] %>
+              <% } else { %>
+              <span class="text-white/70 font-semibold">kein Geburtstag hinterlegt</span>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <span class="text-xs text-white/80 font-semibold shrink-0">
+          Events: <%= (person.events || []).length %>
+        </span>
+      </summary>
+
+      <div class="mt-4">
+        <% if (person.interests && person.interests.length > 0) { %>
+        <div class="app-filter mb-3">
+          <% person.interests.forEach(i => { %>
+          <span class="app-filter-chip"><%= i.icon %> <%= i.name %></span>
+          <% }) %>
+        </div>
+        <% } %>
+
+        <% if (person.occasions && person.occasions.length > 0) { %>
+        <div class="mb-3">
+          <p class="text-xs font-semibold text-white/90 mb-2">🎉 Anlässe</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <% person.occasions.forEach(po => { %>
+            <div class="p-3 rounded-lg border border-white/15 bg-white/10 text-white text-sm">
+              <%= po.occasion?.icon || '🎉' %> <%= po.occasion?.name || 'Anlass' %>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+        <% } %>
+
+        <div>
+          <p class="text-xs font-semibold text-white/90 mb-2">📅 Events</p>
+
+          <% if (!person.events || person.events.length === 0) { %>
+          <p class="text-sm text-white/80">Keine Events vorhanden.</p>
+          <% } else { %>
+          <div class="space-y-2">
+            <% person.events.forEach(ev => {
+                   const giftIds = giftIdsForEvent(ev);
+                   const intIds = interestIdsForEvent(ev);
+              %>
+            <div class="p-4 rounded-lg border border-white/15 bg-white/10" data-export-event data-person-id="<%= person._id %>" data-occasion-id="<%= ev.personOccasion?.occasion?._id || '' %>" data-year="<%= ev.year %>" data-date="<%= isoDate(ev.date) %>" data-status="<%= ev.status %>" data-gift-ids="<%= giftIds.join(',') %>" data-interest-ids="<%= intIds.join(',') %>">
+
+              <div class="flex items-start justify-between gap-3">
+                <div class="min-w-0">
+                  <div class="font-semibold text-white truncate">
+                    <%= ev.personOccasion?.occasion?.icon || '🎉' %>
+                    <%= ev.personOccasion?.occasion?.name || 'Event' %>
+                    <span class="text-white/80 font-semibold">· <%= ev.year %></span>
+                  </div>
+                  <div class="text-xs text-white/80 mt-1">
+                    <%= new Date(ev.date).toLocaleDateString('de-DE') %>
+                  </div>
+                </div>
+
+                <span class="badge <%= ev.status === 'abgeschlossen' ? 'badge-done' : (ev.status === 'in_planung' ? 'badge-planning' : 'badge-no-gift') %>">
+                  <%= ev.status %>
+                </span>
+              </div>
+
+              <% if (ev.assignments && ev.assignments.length > 0) { %>
+              <div class="mt-3 pt-3 border-t border-white/15">
+                <div class="text-xs font-semibold text-white/90 mb-2">🎁 Geschenke</div>
+
+                <div class="space-y-2">
+                  <% ev.assignments.forEach(a => { %>
+                  <div class="app-subitem">
+                    <div class="flex items-start justify-between gap-2">
+                      <div class="min-w-0">
+                        <div class="app-subitem-title"><%= a.gift?.title || 'Geschenk' %></div>
+
+                        <% if (a.gift?.interests && a.gift.interests.length > 0) { %>
+                        <div class="app-subitem-meta">
+                          <% a.gift.interests.slice(0, 4).forEach(i => { %>
+                          <span class="mr-2"><%= i.icon %> <%= i.name %></span>
+                          <% }) %>
+                        </div>
+                        <% } %>
+
+                        <% if (a.notes) { %>
+                        <div class="app-subitem-meta">💬 <%= a.notes %></div>
+                        <% } %>
+                      </div>
+
+                      <div class="text-xs font-semibold text-white shrink-0">
+                        <%= a.status %>
+                      </div>
+                    </div>
+                  </div>
+                  <% }) %>
+                </div>
+              </div>
+              <% } %>
+            </div>
+            <% }) %>
+          </div>
+          <% } %>
+        </div>
+
+      </div>
+    </details>
+    <% }) %>
+
+    <p class="text-xs text-white/80 mt-4 hidden" data-export-empty-persons>
+      Keine Events passend zu diesen Filtern.
+    </p>
+  </div>
+</details>
+
+<details open class="app-panel mb-6" data-export-details data-export-section="gifts">
+  <summary class="app-panel-header cursor-pointer">
+    <div class="flex items-center gap-3">
+      <span class="details-arrow"></span>
+      <h2 class="app-panel-title">🎁 Geschenke nach Interessen</h2>
+    </div>
+    <span class="app-panel-count"><%= giftsArr.length %></span>
+  </summary>
+
+  <div class="app-panel-body">
+    <%
+      const interestMap = new Map();
+      (interestsArr || []).forEach(it => {
+        const key = it?._id ? String(it._id) : null;
+        if (!key) return;
+        interestMap.set(key, { interest: it, gifts: [], giftIds: new Set() });
+      });
+
+      const giftsWithoutInterest = [];
+
+      (giftsArr || []).forEach(g => {
+        const ints = g?.interests || [];
+        if (!ints || ints.length === 0) {
+          giftsWithoutInterest.push(g);
+          return;
+        }
+
+        ints.forEach(intObjOrId => {
+          const id = (intObjOrId && typeof intObjOrId === 'object') ? intObjOrId._id : intObjOrId;
+          const key = id ? String(id) : null;
+          const rec = key ? interestMap.get(key) : null;
+          if (!rec) return;
+
+          const giftId = g?._id ? String(g._id) : null;
+          if (!giftId) return;
+
+          if (!rec.giftIds.has(giftId)) {
+            rec.gifts.push(g);
+            rec.giftIds.add(giftId);
+          }
+        });
+      });
+
+      const groups = Array.from(interestMap.values())
+        .sort((a, b) => String(a.interest?.name || '').localeCompare(String(b.interest?.name || ''), 'de'));
+
+      groups.forEach(gr => gr.gifts.sort((a, b) => String(a?.title || '').localeCompare(String(b?.title || ''), 'de')));
+      giftsWithoutInterest.sort((a, b) => String(a?.title || '').localeCompare(String(b?.title || ''), 'de'));
+    %>
+
+    <div class="space-y-3">
+      <% groups.forEach(gr => { %>
+      <details open class="app-item" data-export-details>
+        <summary class="cursor-pointer flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="details-arrow"></span>
+            <div class="font-semibold text-white truncate">
+              <%= gr.interest?.icon || '💡' %> <%= gr.interest?.name || 'Unbenannt' %>
+            </div>
+          </div>
+          <span class="text-xs text-white/80 font-semibold"><%= gr.gifts.length %></span>
+        </summary>
+
+        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          <% gr.gifts.forEach(g => {
+               const iids = (g.interests || []).map(x => String(x?._id || x)).join(',');
+          %>
+          <div class="p-3 rounded-lg border border-white/15 bg-white/10" data-export-gift-card data-gift-id="<%= g._id %>" data-interest-ids="<%= iids %>">
+            <div class="font-semibold text-white"><%= g.title %></div>
+            <% if (g.link) { %>
+            <div class="text-xs text-white/80 mt-1 break-all"><%= g.link %></div>
+            <% } %>
+            <div class="text-xs text-white/80 mt-2"><%= g.usageCount || 0 %>× verwendet</div>
+          </div>
+          <% }) %>
+        </div>
+      </details>
+      <% }) %>
+
+      <% if (giftsWithoutInterest.length > 0) { %>
+      <details open class="app-item" data-export-details>
+        <summary class="cursor-pointer flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="details-arrow"></span>
+            <div class="font-semibold text-white truncate">📦 Ohne Interessen</div>
+          </div>
+          <span class="text-xs text-white/80 font-semibold"><%= giftsWithoutInterest.length %></span>
+        </summary>
+
+        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+          <% giftsWithoutInterest.forEach(g => { %>
+          <div class="p-3 rounded-lg border border-white/15 bg-white/10" data-export-gift-card data-gift-id="<%= g._id %>" data-interest-ids="">
+            <div class="font-semibold text-white"><%= g.title %></div>
+            <div class="text-xs text-white/80 mt-2"><%= g.usageCount || 0 %>× verwendet</div>
+          </div>
+          <% }) %>
+        </div>
+      </details>
+      <% } %>
+    </div>
+  </div>
+</details>
+
+<details open class="app-panel mb-6" data-export-details data-export-section="occasions">
+  <summary class="app-panel-header cursor-pointer">
+    <div class="flex items-center gap-3">
+      <span class="details-arrow"></span>
+      <h2 class="app-panel-title">🎉 Anlässe</h2>
+    </div>
+    <span class="app-panel-count"><%= occasionsArr.length %></span>
+  </summary>
+
+  <div class="app-panel-body">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+      <% occasionsArr.forEach(o => { %>
+      <div class="app-item" data-export-occasion-card data-occasion-id="<%= o._id %>">
+        <div class="font-semibold text-white">
+          <%= o.icon || '🎉' %> <%= o.name %>
+        </div>
+        <% if (o.day && o.month) { %>
+        <div class="text-xs text-white/80 mt-1">📅 <%= o.day %>.<%= o.month %>.</div>
+        <% } else { %>
+        <div class="text-xs text-white/80 mt-1">beweglich</div>
+        <% } %>
+        <div class="text-xs text-white/80 mt-2">
+          <%= o.isRecurring ? '🔁 jährlich' : '⏺️ einmalig' %>
+          <% if (o.isPublic) { %> · 🌍 öffentlich <% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</details>
+
+<div class="text-center text-slate-600 text-sm mt-10 pb-6">
+  Stand: <%= new Date().toLocaleString('de-DE') %>
+</div>
+
+<script src="/js/data-overview.js" defer></script>
+
+<%- include('../partials/app-foot') %>

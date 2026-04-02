@@ -1,0 +1,89 @@
+<%- include('../partials/app-head', { title: 'Personen – GeschenkKiste' }) %>
+
+<%
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  const sortKey = (sort || 'name').toLowerCase();
+
+  function chipClass(key) {
+    return sortKey === key
+      ? 'app-filter-chip-surface app-filter-chip-surface-active'
+      : 'app-filter-chip-surface';
+  }
+%>
+
+<div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-8">
+  <div>
+    <h1 class="app-h1">👥 Personen</h1>
+    <p class="app-subtle mt-1">Verwalte die Personen, die du beschenken möchtest</p>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-2">
+    <span class="text-sm text-slate-600 mr-2">Sortieren:</span>
+    <a href="/persons?sort=name" class="<%= chipClass('name') %>">Name</a>
+    <a href="/persons?sort=birthday" class="<%= chipClass('birthday') %>">Geburtstag</a>
+
+    <a href="/persons/new" class="btn-surface ml-2">➕ Neue Person</a>
+  </div>
+</div>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Liste</h2>
+    <span class="app-panel-count"><%= (persons || []).length %></span>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (!persons || persons.length === 0) { %>
+      <div class="app-item text-center">
+        <div class="text-6xl mb-3">👥</div>
+        <p class="text-sm text-white/80">Noch keine Personen angelegt.</p>
+        <div class="mt-4">
+          <a href="/persons/new" class="btn-surface">Jetzt erste Person anlegen →</a>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <% persons.forEach(person => { %>
+          <div class="app-item">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <a href="/persons/<%= person._id %>" class="app-item-title">
+                  👤 <%= person.name %>
+                </a>
+
+                <% if (person.hasBirthday) { %>
+                  <div class="app-item-meta">
+                    🎂 <%= person.birthdayDay %>. <%= months[(person.birthdayMonth || 1) - 1] %>
+                  </div>
+                <% } %>
+
+                <% if (person.interests && person.interests.length > 0) { %>
+                  <div class="mt-2 flex flex-wrap gap-2">
+                    <% person.interests.slice(0, 4).forEach(interest => { %>
+                      <span class="app-filter-chip">
+                        <%= interest.icon %> <%= interest.name %>
+                      </span>
+                    <% }) %>
+                    <% if (person.interests.length > 4) { %>
+                      <span class="app-filter-chip">+<%= person.interests.length - 4 %></span>
+                    <% } %>
+                  </div>
+                <% } %>
+
+                <% if (person.notes) { %>
+                  <p class="text-xs text-white/85 mt-2 line-clamp-2"><%= person.notes %></p>
+                <% } %>
+              </div>
+
+              <div class="shrink-0 flex flex-col gap-2">
+                <a href="/persons/<%= person._id %>/edit" class="btn-surface" title="Bearbeiten">✏️</a>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/app-foot') %>

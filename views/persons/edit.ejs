@@ -1,0 +1,245 @@
+<%- include('../partials/app-head', { title: `${person.name} bearbeiten – GeschenkKiste` }) %>
+
+<%
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  function movable(occ) {
+    return !(occ.day != null && occ.month != null) && occ.isBirthday !== true;
+  }
+%>
+
+<div class="mb-6">
+  <a href="/persons/<%= person._id %>" class="app-link">← Zurück zu <%= person.name %></a>
+</div>
+
+<div class="mb-8">
+  <h1 class="app-h1">✏️ <%= person.name %> bearbeiten</h1>
+  <p class="app-subtle mt-1">Interessen & Anlässe kannst du direkt hier auswählen oder neu anlegen.</p>
+</div>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Bearbeitung</h2>
+  </div>
+
+  <div class="app-panel-body">
+    <form action="/persons/<%= person._id %>" method="POST" class="space-y-8">
+      <input type="hidden" name="_method" value="PATCH">
+
+      <div>
+        <label class="block text-white font-semibold mb-2">Name *</label>
+        <input type="text" name="name" required value="<%= person.name %>" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20
+                      focus:outline-none focus:ring-2 focus:ring-white/40">
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-2">Geburtstag *</label>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs text-white/80 mb-1 font-semibold">Tag</label>
+            <input type="number" name="birthdayDay" min="1" max="31" required value="<%= person.birthdayDay || '' %>" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20">
+          </div>
+          <div>
+            <label class="block text-xs text-white/80 mb-1 font-semibold">Monat</label>
+            <select name="birthdayMonth" required class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20">
+              <option value="">-- Monat wählen --</option>
+              <% months.forEach((m, i) => { %>
+              <option value="<%= i + 1 %>" <%= person.birthdayMonth === (i+1) ? 'selected' : '' %>><%= m %></option>
+              <% }) %>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <label class="block text-white font-semibold">Interessen</label>
+          <a href="/interests" class="app-link-on-dark text-sm">Interessen verwalten →</a>
+        </div>
+
+        <% if (typeof inferredInterests !== 'undefined' && inferredInterests.length > 0) { %>
+        <div class="app-item mb-3">
+          <p class="text-sm font-semibold text-white mb-2">
+            Abgeleitete Interessen (aus Geschenkideen / Historie)
+          </p>
+
+          <div class="flex flex-wrap gap-2">
+            <% inferredInterests.forEach(i => { %>
+            <button type="button" class="app-filter-chip" data-pick-interest-id="<%= i._id %>">
+              <%= i.icon || '🎁' %> <%= i.name %> <span class="text-xs opacity-70">+</span>
+            </button>
+            <% }) %>
+          </div>
+
+          <p class="text-xs text-white/80 mt-2">
+            Klick → wird unten als echtes Interesse übernommen.
+          </p>
+        </div>
+        <% } %>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 border border-white/15 rounded-lg p-4 bg-white/10 max-h-64 overflow-y-auto">
+          <% (interests || []).forEach(interest => {
+               const isSelected = person.interests.some(pi => String(pi._id) === String(interest._id));
+          %>
+          <label class="flex items-center gap-2 p-2 rounded hover:bg-white/10 transition cursor-pointer">
+            <input type="checkbox" name="interests" value="<%= interest._id %>" class="h-4 w-4" <%= isSelected ? 'checked' : '' %>>
+            <span class="text-sm font-semibold text-white"><%= interest.icon %> <%= interest.name %></span>
+          </label>
+          <% }) %>
+        </div>
+
+        <div class="mt-3 p-4 rounded-lg border border-dashed border-white/20 bg-white/10">
+          <p class="text-sm font-semibold text-white mb-3">➕ Neues Interesse direkt anlegen</p>
+          <div class="flex gap-2 items-center">
+            <input type="text" name="newInterestName" placeholder="Name (z.B. Lesen)" class="flex-1 px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+
+            <div class="w-28">
+              <%- include('../partials/icon-picker-field', {
+                name: 'newInterestIcon',
+                value: '',
+                fallback: '🎁',
+                inputClass: 'w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20',
+                buttonClass: 'btn-surface'
+              }) %>
+            </div>
+          </div>
+
+          <label class="mt-3 flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" name="newInterestIsPublic" value="true" class="check-on-blue mt-0.5">
+            <div>
+              <span class="text-white font-semibold block">🌍 Interesse öffentlich machen</span>
+              <p class="text-xs text-white/80">Wenn aktiviert, wird das neue Interesse öffentlich (Katalog).</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <label class="block text-white font-semibold">Anlässe</label>
+          <a href="/occasions" class="app-link-on-dark text-sm">Anlässe verwalten →</a>
+        </div>
+
+        <p class="text-xs text-white/80 mb-3">
+          Hinweis: Wenn du einen Anlass abwählst, werden zugehörige Events/Zuordnungen gelöscht.
+        </p>
+
+        <div class="space-y-2 border border-white/15 rounded-lg p-4 bg-white/10 max-h-64 overflow-y-auto">
+          <% (occasions || []).forEach(occ => { %>
+          <%
+              const occId = String(occ._id);
+              const isAssigned = assignedOccasionIds && assignedOccasionIds.has(occId);
+              const isBirthday = occ.isBirthday === true;
+              const poId = poIdByOccasionId ? poIdByOccasionId.get(occId) : null;
+
+              const startVal =
+                (typeof startYearByOccasionId !== 'undefined' && startYearByOccasionId && startYearByOccasionId.get)
+                  ? (startYearByOccasionId.get(occId) ?? '')
+                  : '';
+
+              const endVal =
+                (typeof endYearByOccasionId !== 'undefined' && endYearByOccasionId && endYearByOccasionId.get)
+                  ? (endYearByOccasionId.get(occId) ?? '')
+                  : '';
+            %>
+
+          <div class="p-3 rounded-lg bg-white/10 border border-white/15">
+            <div class="flex items-center justify-between gap-2">
+              <label class="flex items-center gap-2 cursor-pointer min-w-0">
+                <input type="checkbox" name="occasionIds[]" value="<%= occ._id %>" class="h-4 w-4 occ-checkbox" data-range-target="range_<%= occId %>" <%= isAssigned ? 'checked' : '' %> <%= isBirthday ? 'checked disabled' : '' %>>
+
+                <span class="text-sm font-semibold text-white truncate">
+                  <%= occ.icon %> <%= occ.name %>
+                  <% if (isBirthday) { %><span class="text-xs text-white/80">(automatisch)</span><% } %>
+                  <% if (movable(occ)) { %><span class="text-xs text-white/80">(beweglich)</span><% } %>
+                </span>
+              </label>
+
+              <% if (!isBirthday && isAssigned && movable(occ) && poId) { %>
+              <a href="/persons/<%= person._id %>/occasions/<%= poId %>/date?returnTo=<%= encodeURIComponent('/persons/' + person._id + '/edit') %>" class="btn-surface text-xs">
+                Datum ✏️
+              </a>
+              <% } %>
+            </div>
+
+            <div id="range_<%= occId %>" class="mt-3 <%= isAssigned ? '' : 'hidden' %>">
+              <div class="p-3 rounded-lg border border-white/15 bg-white/10">
+                <p class="text-xs text-white/80 font-semibold mb-2">
+                  Zeitraum (nur für diesen Anlass bei <%= person.name %>)
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs text-white/80 mb-1 font-semibold">Startjahr (optional)</label>
+                    <input type="number" name="startYears[<%= occId %>]" min="2000" max="2100" value="<%= startVal %>" placeholder="<%= new Date().getFullYear() %>" class="w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+                    <p class="text-xs text-white/80 mt-1">leer = aktuelles Jahr</p>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs text-white/80 mb-1 font-semibold">Endjahr (optional)</label>
+                    <input type="number" name="endYears[<%= occId %>]" min="2000" max="2100" value="<%= endVal %>" placeholder="leer = unbegrenzt" class="w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <% }) %>
+        </div>
+
+        <div class="mt-3 p-4 rounded-lg border border-dashed border-white/20 bg-white/10">
+          <p class="text-sm font-semibold text-white mb-3">➕ Neuen Anlass direkt anlegen</p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <input type="text" name="newOccasionName" placeholder="Name (z.B. Abschluss)" class="sm:col-span-2 px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+
+            <div>
+              <%- include('../partials/icon-picker-field', {
+                name: 'newOccasionIcon',
+                value: '',
+                fallback: '🎉',
+                inputClass: 'w-full px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20',
+                buttonClass: 'btn-surface'
+              }) %>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mt-2">
+            <input type="number" name="newOccasionDay" min="1" max="31" placeholder="Tag (optional)" class="px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+            <input type="number" name="newOccasionMonth" min="1" max="12" placeholder="Monat (optional)" class="px-3 py-2 text-sm rounded-lg bg-white text-slate-900 border border-white/20">
+          </div>
+
+          <p class="text-xs text-white/80 mt-2">
+            Für bewegliche Anlässe kann Tag/Monat leer bleiben → Datum wird pro Jahr gepflegt.
+          </p>
+
+          <label class="flex items-center gap-2 mt-2 text-sm font-semibold text-white">
+            <input type="checkbox" name="newOccasionIsRecurring" value="true" checked class="h-4 w-4">
+            Wiederkehrender Anlass (jährlich)
+          </label>
+
+          <label class="mt-3 flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" name="newOccasionIsPublic" value="true" class="check-on-blue mt-0.5">
+            <div>
+              <span class="text-white font-semibold block">🌍 Anlass öffentlich machen</span>
+              <p class="text-xs text-white/80">Wenn aktiviert, wird der neue Anlass öffentlich (Katalog).</p>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-2">Notizen</label>
+        <textarea name="notes" rows="4" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20"><%= person.notes || '' %></textarea>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button type="submit" class="btn-primary flex-1 py-3">Speichern</button>
+        <a href="/persons/<%= person._id %>" class="btn-surface flex-1 justify-center py-3">Abbrechen</a>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<script src="/js/person-edit.js" defer></script>
+<%- include('../partials/app-foot') %>

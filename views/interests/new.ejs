@@ -1,0 +1,101 @@
+<%- include('../partials/app-head', { title: 'Neues Interesse – GeschenkKiste' }) %>
+
+<div class="mb-8">
+  <h1 class="app-h1">➕ Neues Interesse</h1>
+  <p class="app-subtle mt-1">Du kannst direkt Personen & eigene Geschenke zuordnen.</p>
+</div>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Interesse anlegen</h2>
+  </div>
+
+  <div class="app-panel-body">
+    <form action="/interests" method="POST" class="space-y-8">
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="sm:col-span-2">
+          <label class="block text-white font-semibold mb-2">Name *</label>
+          <input type="text" name="name" required class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20
+                        focus:outline-none focus:ring-2 focus:ring-white/40">
+        </div>
+
+        <div>
+          <label class="block text-white font-semibold mb-2">Icon</label>
+          <%- include('../partials/icon-picker-field', {
+            name: 'icon',
+            value: '',
+            fallback: '🎁',
+            inputClass: 'w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20'
+          }) %>
+          <p class="text-xs text-white/80 mt-2">Wähle dein Icon über "😊".</p>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-white font-semibold mb-2">Beschreibung</label>
+        <textarea name="description" rows="3" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20
+                         focus:outline-none focus:ring-2 focus:ring-white/40"></textarea>
+      </div>
+
+      <div class="app-item">
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" name="isPublic" value="true" class="check-on-blue mt-0.5">
+          <div>
+            <div class="font-semibold text-white">🌍 Interesse öffentlich machen</div>
+            <div class="text-sm text-white/80">
+              Wenn aktiviert, wird das neue Interesse öffentlich (Katalog).
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <div>
+        <h3 class="text-white font-bold mb-2">👥 Personen zuordnen</h3>
+
+        <% if (!persons || persons.length === 0) { %>
+        <p class="text-sm text-white/80">Keine Personen vorhanden.</p>
+        <% } else { %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 border border-white/15 rounded-lg p-4 bg-white/10 max-h-72 overflow-y-auto">
+          <% persons.forEach(p => { %>
+          <label class="flex items-center gap-2 p-2 rounded hover:bg-white/10 transition cursor-pointer">
+            <input type="checkbox" name="personIds" value="<%= p._id %>" class="check-on-blue">
+            <span class="text-sm font-semibold text-white"><%= p.name %></span>
+          </label>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+
+      <div>
+        <h3 class="text-white font-bold mb-1">🎁 Geschenke zuordnen</h3>
+        <p class="text-xs text-white/80 mb-2">Katalog-Geschenke sind read-only.</p>
+
+        <% if (!gifts || gifts.length === 0) { %>
+        <p class="text-sm text-white/80">Keine Geschenke vorhanden.</p>
+        <% } else { %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 border border-white/15 rounded-lg p-4 bg-white/10 max-h-72 overflow-y-auto">
+          <% gifts.forEach(g => { 
+                 const isCatalog = g.isPublic === true;
+            %>
+          <label class="flex items-center gap-2 p-2 rounded transition cursor-pointer <%= isCatalog ? 'opacity-60' : 'hover:bg-white/10' %>">
+            <input type="checkbox" name="giftIds" value="<%= g._id %>" class="check-on-blue" <%= isCatalog ? 'disabled' : '' %>>
+            <span class="text-sm font-semibold text-white">
+              <%= g.title %> <%= isCatalog ? '(Katalog)' : '' %>
+            </span>
+          </label>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button type="submit" class="btn-primary flex-1 py-3">Speichern</button>
+        <a href="/interests" class="btn-surface flex-1 justify-center py-3">Abbrechen</a>
+      </div>
+
+    </form>
+  </div>
+</section>
+
+<%- include('../partials/app-foot') %>

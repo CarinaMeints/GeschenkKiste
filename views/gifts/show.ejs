@@ -1,0 +1,280 @@
+<%- include('../partials/app-head', { title: `${gift.title} – GeschenkKiste` }) %>
+
+<%
+  const currentUserId =
+    (typeof currentUser !== 'undefined' && currentUser && (currentUser._id || currentUser.id))
+      ? String(currentUser._id || currentUser.id)
+      : null;
+
+  const giftOwnerId =
+    gift && gift.createdBy
+      ? (gift.createdBy._id ? gift.createdBy._id : gift.createdBy)
+      : null;
+
+  const canEdit = !!(currentUserId && giftOwnerId && String(giftOwnerId) === currentUserId && gift.isPublic !== true);
+
+  function bestImageUrlFromGift(g) {
+    const imgs = (g && Array.isArray(g.images)) ? g.images : [];
+    const primary = imgs.find(x => x && x.isPrimary);
+    const first = imgs[0];
+    return (primary && primary.url) ? primary.url : (first && first.url ? first.url : '');
+  }
+
+  function isSafeHttpUrl(u) {
+    const s = String(u || '').trim().toLowerCase();
+    return s.startsWith('http://') || s.startsWith('https://');
+  }
+
+  const primaryUrl = bestImageUrlFromGift(gift);
+  const returnToGift = '/gifts/' + gift._id;
+%>
+
+<div class="mb-6">
+  <a href="/gifts" class="app-link">← Zurück zum Katalog</a>
+</div>
+
+<section class="app-panel mb-8">
+  <div class="app-panel-header">
+    <div class="min-w-0">
+      <h1 class="app-panel-title truncate">🎁 <%= gift.title %></h1>
+
+      <p class="text-xs text-white/80 mt-1 font-semibold">
+        <%= (gift.usageCount || 0) %>× zugeordnet
+        <% if (gift.isPublic) { %> · 🌍 Katalog (read-only) <% } %>
+      </p>
+    </div>
+
+    <div class="flex gap-2 shrink-0">
+      <% if (canEdit) { %>
+      <a href="/gifts/<%= gift._id %>/edit" class="btn-surface">✏️ Bearbeiten</a>
+
+      <form action="/gifts/<%= gift._id %>" method="POST" data-dc-confirm data-dc-title="Geschenk wirklich löschen?" data-dc-message="Möchtest du das Geschenk „<%= gift.title %>“ wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden." data-dc-ok="Ja, löschen">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn-surface" style="border-color:#fecaca;color:#b91c1c;">
+          🗑️
+        </button>
+      </form>
+      <% } %>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (gift.isPublic) { %>
+    <div class="app-item mb-4">
+      <p class="text-sm font-semibold text-white">Hinweis</p>
+      <p class="text-sm text-white/90 mt-1">
+        Kataloggeschenke können nicht bearbeitet oder gelöscht werden.
+      </p>
+    </div>
+    <% } %>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+      <div class="lg:col-span-1">
+        <div class="app-item">
+          <% if (primaryUrl) { %>
+          <img src="<%= primaryUrl %>" alt="<%= gift.title %>" class="w-full h-56 rounded-lg object-cover border border-white/20 bg-white/10">
+          <% } else { %>
+          <div class="w-full h-56 rounded-lg border border-white/20 bg-white/10 flex items-center justify-center text-6xl">
+            🎁
+          </div>
+          <% } %>
+
+          <% if (gift.images && gift.images.length > 1) { %>
+          <div class="mt-3 grid grid-cols-5 gap-2">
+            <% gift.images.slice(0, 10).forEach(img => { %>
+            <img src="<%= img.url %>" alt="Bild" class="w-full h-14 rounded object-cover border <%= img.isPrimary ? 'border-white/60' : 'border-white/20' %> bg-white/10">
+            <% }) %>
+          </div>
+          <% if (gift.images.length > 10) { %>
+          <div class="text-xs text-white/80 font-semibold mt-2">
+            +<%= gift.images.length - 10 %> weitere
+          </div>
+          <% } %>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="lg:col-span-2 space-y-4">
+        <% if (gift.description) { %>
+        <div class="app-item">
+          <p class="text-sm font-semibold text-white mb-1">Beschreibung</p>
+          <p class="text-sm text-white/90"><%= gift.description %></p>
+        </div>
+        <% } %>
+
+        <% if (gift.link) { %>
+        <div class="app-item">
+          <p class="text-sm font-semibold text-white mb-1">Link</p>
+
+          <% if (isSafeHttpUrl(gift.link)) { %>
+          <a href="<%= gift.link %>" target="_blank" rel="noopener noreferrer" class="app-link-on-dark break-all">
+            <%= gift.link %>
+          </a>
+          <% } else { %>
+          <p class="text-xs text-white/80 font-semibold">
+            (Dieser Link wurde aus Sicherheitsgründen deaktiviert – bitte nur http(s) Links verwenden.)
+          </p>
+          <div class="text-xs text-white/80 break-all mt-1"><%= gift.link %></div>
+          <% } %>
+        </div>
+        <% } %>
+
+        <div class="app-item">
+          <p class="text-sm font-semibold text-white mb-2">Interessen</p>
+
+          <% if (gift.interests && gift.interests.length > 0) { %>
+          <div class="app-filter">
+            <% gift.interests.forEach(i => { %>
+            <a href="/interests/<%= i._id %>" class="app-filter-chip">
+              <%= i.icon %> <%= i.name %>
+            </a>
+            <% }) %>
+          </div>
+          <% } else { %>
+          <p class="text-sm text-white/80">Keine Interessen zugeordnet.</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="app-panel mb-8" id="usage">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">📌 Nutzung / Planung</h2>
+    <span class="app-panel-count"><%= (usage || []).length %></span>
+  </div>
+
+  <div class="app-panel-body space-y-4">
+
+    <div class="app-item">
+      <p class="text-sm font-semibold text-white mb-3">➕ Diesem Event zuordnen</p>
+
+      <% if (!availableEvents || availableEvents.length === 0) { %>
+      <p class="text-sm text-white/80">
+        Keine passenden Events verfügbar (entweder keine Events im Zeithorizont oder dieses Geschenk ist überall bereits zugeordnet).
+      </p>
+      <% } else { %>
+      <form action="/gifts/<%= gift._id %>/assign-to-event" method="POST" class="flex flex-col sm:flex-row gap-3 sm:items-end">
+        <div class="flex-1">
+          <label class="block text-xs text-white/80 font-semibold mb-1">Event *</label>
+          <select name="eventId" required class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20">
+            <option value="">– auswählen –</option>
+            <% availableEvents.forEach(ev => { %>
+            <option value="<%= ev._id %>">
+              <%= new Date(ev.date).toLocaleDateString('de-DE') %> ·
+              <%= ev.personOccasion.occasion.icon %> <%= ev.personOccasion.occasion.name %> –
+              <%= ev.personOccasion.person.name %>
+            </option>
+            <% }) %>
+          </select>
+
+          <input type="text" name="notes" placeholder="Notiz (optional)" class="mt-2 w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20">
+        </div>
+
+        <button type="submit" class="btn-primary">Zuordnen</button>
+      </form>
+      <% } %>
+    </div>
+
+    <% if (!usage || usage.length === 0) { %>
+    <p class="text-sm text-white/80">Dieses Geschenk ist noch keinem Event zugeordnet.</p>
+    <% } else { %>
+    <div class="space-y-3">
+      <% usage.forEach(a => {
+          const ev = a.event;
+          const po = (ev && ev.personOccasion) ? ev.personOccasion : null;
+        %>
+      <div class="app-item">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <div class="font-semibold text-white truncate">
+              <%= (po && po.occasion && po.occasion.icon) ? po.occasion.icon : '🎉' %>
+              <%= (po && po.occasion && po.occasion.name) ? po.occasion.name : 'Anlass' %> –
+              <%= (po && po.person && po.person.name) ? po.person.name : 'Person' %>
+            </div>
+
+            <div class="text-xs text-white/80 mt-1">
+              📅 <%= (ev && ev.date) ? new Date(ev.date).toLocaleDateString('de-DE') : '' %>
+              · Jahr <%= (ev && ev.year) ? ev.year : '' %>
+              · Status: <span class="font-semibold"><%= a.status %></span>
+            </div>
+
+            <% if (a.notes) { %>
+            <div class="text-xs text-white/80 mt-2">💬 <%= a.notes %></div>
+            <% } %>
+          </div>
+
+          <% if (ev && ev._id) { %>
+          <a class="app-item-sub-link" href="/events/<%= ev._id %>?returnTo=<%= encodeURIComponent(returnToGift) %>">
+            Event →
+          </a>
+          <% } %>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<% if (canEdit) { %>
+<section class="app-panel mb-8">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">🖼️ Bilder</h2>
+    <span class="app-panel-count"><%= (gift.images || []).length %></span>
+  </div>
+
+  <div class="app-panel-body space-y-4">
+
+    <div class="app-item">
+      <p class="text-sm font-semibold text-white mb-3">➕ Weitere Bilder hinzufügen</p>
+
+      <form action="/gifts/<%= gift._id %>/images" method="POST" enctype="multipart/form-data" class="flex flex-col sm:flex-row gap-3 sm:items-end">
+        <div class="flex-1">
+          <input type="file" name="images" multiple accept="image/*" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20">
+          <p class="text-xs text-white/80 mt-2">Max. 10 Bilder möglich.</p>
+        </div>
+
+        <button type="submit" class="btn-primary">Hochladen</button>
+      </form>
+    </div>
+
+    <% if (gift.images && gift.images.length > 0) { %>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <% gift.images.forEach(img => { %>
+      <div class="app-item">
+        <img src="<%= img.url %>" alt="Bild" class="w-full h-32 rounded-lg object-cover border <%= img.isPrimary ? 'border-white/60' : 'border-white/20' %> bg-white/10">
+
+        <div class="mt-3 flex flex-wrap gap-2">
+          <% if (!img.isPrimary) { %>
+          <form action="/gifts/<%= gift._id %>/images/<%= img._id %>/primary" method="POST">
+            <input type="hidden" name="_method" value="PATCH">
+            <button type="submit" class="btn-surface text-xs">Hauptbild</button>
+          </form>
+          <% } else { %>
+          <span class="badge badge-planning text-xs">Hauptbild</span>
+          <% } %>
+
+          <form action="/gifts/<%= gift._id %>/images/<%= img._id %>" method="POST" data-dc-confirm data-dc-title="Bild wirklich löschen?" data-dc-message="Möchtest du dieses Bild wirklich löschen?" data-dc-ok="Ja, löschen">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn-surface text-xs" style="border-color:#fecaca;color:#b91c1c;">
+              🗑️
+            </button>
+          </form>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } else { %>
+    <p class="text-sm text-white/80">Noch keine Bilder vorhanden.</p>
+    <% } %>
+  </div>
+</section>
+<% } %>
+
+<%- include('../partials/delete-confirm.ejs') %>
+<script src="/js/delete-confirm.js" defer></script>
+
+<%- include('../partials/app-foot') %>

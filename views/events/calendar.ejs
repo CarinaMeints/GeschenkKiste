@@ -1,0 +1,19 @@
+<%- include('../partials/app-head', { title: 'Kalender – GeschenkKiste' }) %>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="app-h1">📅 Kalender</h1>
+
+  <div class="flex gap-2">
+    <a href="/events" class="btn-surface">📋 Listen-Ansicht</a>
+  </div>
+</div>
+
+<%- include('../partials/calendar-panel', {
+  title: '📅 Kalender',
+  headerLinkHref: null,
+  headerLinkText: null,
+  showToday: true,
+  returnTo: '/events/calendar'
+}) %>
+
+<%- include('../partials/app-foot') %>

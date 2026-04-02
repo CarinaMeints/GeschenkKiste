@@ -1,0 +1,265 @@
+<%- include('../partials/app-head', {
+  title: `${person.name} – geteilt – GeschenkKiste`,
+  hideNav: true,
+  hideFlash: true
+}) %>
+
+<%
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+  function formatDateShort(date) {
+    return new Date(date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  function daysText(d) {
+    if (d == null) return '';
+    if (d === 0) return 'heute';
+    if (d === 1) return 'morgen';
+    if (d < 0) return `vor ${Math.abs(d)} Tagen`;
+    return `in ${d} Tagen`;
+  }
+
+  function badgeClass(state) {
+    if (state === 'done') return 'badge badge-done';
+    if (state === 'planning') return 'badge badge-planning';
+    return 'badge badge-no-gift';
+  }
+
+  function badgeLabel(state) {
+    if (state === 'done') return 'abgeschlossen';
+    if (state === 'planning') return 'in Planung';
+    return 'kein Geschenk';
+  }
+
+  function isMovableOccasion(occ) {
+    return !(occ?.day != null && occ?.month != null) && occ?.isBirthday !== true;
+  }
+%>
+
+<div class="mb-6">
+  <a href="/" class="app-link">← Startseite</a>
+  <p class="text-xs">
+    Erstellt mit GeschenkKiste.
+  </p>
+</div>
+
+<section class="app-panel mb-8">
+  <div class="app-panel-header">
+    <h1 class="app-panel-title">🔗 Geteilte Person: <%= person.name %></h1>
+    <span class="app-panel-count">Read-only</span>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (person.hasBirthday) { %>
+    <p class="text-white/90 font-semibold">
+      🎂 <%= person.birthdayDay %>. <%= months[(person.birthdayMonth || 1) - 1] %>
+    </p>
+    <% } %>
+
+    <% if (person.notes) { %>
+    <div class="app-item mt-4">
+      <p class="text-sm font-semibold text-white mb-1">Notizen</p>
+      <p class="text-sm text-white/90"><%= person.notes %></p>
+    </div>
+    <% } %>
+
+    <div class="mt-4">
+      <p class="text-sm font-semibold text-white mb-2">💡 Interessen</p>
+      <div class="app-filter">
+        <% (person.interests || []).forEach(i => { %>
+        <span class="app-filter-chip"><%= i.icon %> <%= i.name %></span>
+        <% }) %>
+      </div>
+
+      <% if (inferredInterests && inferredInterests.length > 0) { %>
+      <p class="text-xs text-white/80 font-semibold mt-4 mb-2">
+        Abgeleitete Interessen (aus Geschenkideen / Historie)
+      </p>
+      <div class="app-filter">
+        <% inferredInterests.forEach(i => { %>
+        <span class="app-filter-chip app-filter-chip-inferred">
+          <%= i.icon || '🎁' %> <%= i.name %>
+          <span class="text-xs opacity-70">(abgeleitet)</span>
+        </span>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+  <section class="app-panel lg:col-span-1">
+    <div class="app-panel-header">
+      <h2 class="app-panel-title">🎉 Anlässe</h2>
+      <span class="app-panel-count"><%= (personOccasions || []).length %></span>
+    </div>
+
+    <div class="app-panel-body">
+      <% if (!personOccasions || personOccasions.length === 0) { %>
+      <p class="text-sm text-white/80">Keine Anlässe zugeordnet.</p>
+      <% } else { %>
+      <div class="space-y-2">
+        <% personOccasions.forEach(po => { %>
+        <div class="app-item">
+          <div class="font-semibold text-white">
+            <%= po.occasion?.icon || '🎉' %> <%= po.occasion?.name || 'Anlass' %>
+            <% if (isMovableOccasion(po.occasion)) { %>
+            <span class="text-xs text-white/80 font-semibold">· beweglich</span>
+            <% } %>
+          </div>
+
+          <div class="app-item-meta">
+            <% if (po.occasion?.day && po.occasion?.month) { %>
+            <%= po.occasion.day %>. <%= months[(po.occasion.month || 1) - 1] %>
+            <% } else if (po.occasion?.isBirthday && person.hasBirthday) { %>
+            <%= person.birthdayDay %>. <%= months[(person.birthdayMonth || 1) - 1] %>
+            <% } else if (po.customDay && po.customMonth && po.customYear) { %>
+            <%= po.customDay %>. <%= months[(po.customMonth || 1) - 1] %> (<%= po.customYear %>)
+            <% } else { %>
+            Datum fehlt
+            <% } %>
+          </div>
+
+          <div class="mt-2 flex flex-wrap gap-2">
+            <% if (po.startYear) { %>
+            <span class="badge badge-planning">ab <%= po.startYear %></span>
+            <% } %>
+            <% if (po.endYear) { %>
+            <span class="badge badge-done">bis <%= po.endYear %></span>
+            <% } else { %>
+            <span class="badge badge-done">unbegrenzt</span>
+            <% } %>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </section>
+
+  <div class="lg:col-span-2 space-y-6">
+
+    <section class="app-panel">
+      <div class="app-panel-header">
+        <div>
+          <h2 class="app-panel-title">📅 Anstehende Events</h2>
+          <p class="text-xs text-white/80">Zeithorizont: <%= horizonMonths %> Monate</p>
+        </div>
+        <span class="app-panel-count"><%= (upcomingEvents || []).length %></span>
+      </div>
+
+      <div class="app-panel-body">
+        <% if (!upcomingEvents || upcomingEvents.length === 0) { %>
+        <p class="text-sm text-white/80">Keine anstehenden Events im Zeithorizont.</p>
+        <% } else { %>
+        <div class="space-y-3">
+          <% upcomingEvents.forEach(ev => { %>
+          <details class="app-item" open>
+            <summary class="cursor-pointer flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <div class="font-semibold text-white truncate">
+                  <%= ev.personOccasion?.occasion?.icon || '🎉' %>
+                  <%= ev.personOccasion?.occasion?.name || 'Event' %>
+                  <span class="text-white/80 font-semibold">· <%= ev.year %></span>
+                </div>
+
+                <div class="app-item-meta">
+                  <%= formatDateShort(ev.date) %> · <%= daysText(ev.daysUntil) %>
+                  <% if (ev.giftState === 'planning') { %>
+                  · <%= ev.assignmentCount %> Idee(n)
+                  <% } %>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 shrink-0">
+                <span class="<%= badgeClass(ev.giftState) %>"><%= badgeLabel(ev.giftState) %></span>
+                <span class="details-arrow"></span>
+              </div>
+            </summary>
+
+            <div class="mt-4 pt-3 border-t border-white/15">
+              <p class="text-sm font-semibold text-white mb-2">🎁 Zuordnungen</p>
+
+              <% if (!ev.assignments || ev.assignments.length === 0) { %>
+              <p class="text-sm text-white/80">Noch keine Geschenke zugeordnet.</p>
+              <% } else { %>
+              <div class="space-y-2">
+                <% ev.assignments.forEach(a => { %>
+                <div class="app-subitem">
+                  <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                      <div class="app-subitem-title">
+                        <%= a.gift?.title || 'Geschenk' %>
+                      </div>
+
+                      <% if (a.gift?.interests && a.gift.interests.length > 0) { %>
+                      <div class="mt-1 text-xs text-white/80">
+                        <% a.gift.interests.slice(0, 4).forEach(i => { %>
+                        <span class="mr-2"><%= i.icon %> <%= i.name %></span>
+                        <% }) %>
+                      </div>
+                      <% } %>
+
+                      <% if (a.notes) { %>
+                      <div class="text-xs text-white/80 mt-1">💬 <%= a.notes %></div>
+                      <% } %>
+                    </div>
+
+                    <div class="text-xs font-semibold text-white">
+                      <%= a.status %>
+                    </div>
+                  </div>
+                </div>
+                <% }) %>
+              </div>
+              <% } %>
+            </div>
+          </details>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </section>
+
+    <section class="app-panel">
+      <div class="app-panel-header">
+        <h2 class="app-panel-title">🎁 Geschenk-Historie</h2>
+        <span class="app-panel-count"><%= (giftHistory || []).length %></span>
+      </div>
+
+      <div class="app-panel-body">
+        <% if (!giftHistory || giftHistory.length === 0) { %>
+        <p class="text-sm text-white/80">Noch keine Geschenke verschenkt.</p>
+        <% } else { %>
+        <div class="space-y-3">
+          <% giftHistory.forEach(item => { %>
+          <div class="app-item">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <div class="font-semibold text-white">
+                  <%= item.gift?.title || 'Geschenk' %>
+                </div>
+                <div class="app-item-meta">
+                  <%= item.event?.personOccasion?.occasion?.name || 'Anlass' %>
+                  · <%= item.event?.year || '' %>
+                  · <%= item.event?.date ? formatDateShort(item.event.date) : '' %>
+                </div>
+                <% if (item.notes) { %>
+                <div class="text-xs text-white/85 mt-2">💬 <%= item.notes %></div>
+                <% } %>
+              </div>
+              <span class="badge badge-done">fertig</span>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<%- include('../partials/app-foot') %>

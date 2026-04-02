@@ -1,0 +1,19 @@
+<%- include('partials/app-head', { title: 'Fehler – GeschenkKiste', hideFlash: true }) %>
+
+<section class="app-panel max-w-2xl mx-auto mt-10">
+  <div class="app-panel-header">
+    <h1 class="app-panel-title">Fehler</h1>
+  </div>
+
+  <div class="app-panel-body">
+    <p class="text-white/90 font-semibold">
+      <%= (typeof error === 'string' && error) ? error : 'Die Seite existiert nicht (mehr) oder du hast keine Berechtigung.' %>
+    </p>
+
+    <div class="mt-6 flex flex-col sm:flex-row gap-3">
+      <a href="/dashboard" class="btn-primary flex-1 justify-center py-3">Zum Dashboard</a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/app-foot') %>

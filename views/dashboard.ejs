@@ -1,0 +1,240 @@
+<%- include('partials/app-head', { title: 'Dashboard – GeschenkKiste' }) %>
+
+<div>
+
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-8">
+    <div>
+      <h1 class="app-h1">Dashboard</h1>
+      <p class="app-subtle mt-1">
+        Willkommen zurück, <span class="font-semibold"><%= currentUser.username %></span>!
+      </p>
+    </div>
+
+    <div class="text-sm app-subtle">
+      Zeithorizont: <span class="font-semibold"><%= todoMonths %> Monate</span>
+      · <a href="/settings" class="app-link">ändern</a>
+    </div>
+  </div>
+
+  <%
+    const showGettingStarted =
+        (personCount === 0) || (eventCountHorizon === 0);
+    %>
+
+  <% if (showGettingStarted) { %>
+  <%- include('partials/getting-started') %> <br>
+  <% } %>
+
+  <%
+    const dashboardReturnTo = '/dashboard' + (eventFilter && eventFilter !== 'all' ? `?eventFilter=${eventFilter}` : '');
+    
+    function formatDateShort(date) {
+      return new Date(date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+    function daysText(d) {
+      if (d == null) return '';
+      if (d === 0) return 'heute';
+      if (d === 1) return 'morgen';
+      return `in ${d} Tagen`;
+    }
+
+    function stateBadgeClasses(state) {
+      if (state === 'done') return 'badge badge-done';
+      if (state === 'planning') return 'badge badge-planning';
+      return 'badge badge-no-gift';
+    }
+
+    function stateLabel(state) {
+      if (state === 'done') return 'abgeschlossen';
+      if (state === 'planning') return 'in Planung';
+      return 'kein Geschenk';
+    }
+
+    function chipClass(key) {
+      return (eventFilter === key)
+        ? 'app-filter-chip app-filter-chip-active'
+        : 'app-filter-chip';
+    }
+  %>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <div class="lg:col-span-7">
+      <%- include('partials/calendar-panel', {
+        title: '📅 Kalender',
+        headerLinkHref: '/events/calendar',
+        headerLinkText: 'vollständiger Kalender →',
+        showToday: true,
+        returnTo: '/dashboard'
+      }) %>
+    </div>
+
+    <div class="lg:col-span-5 space-y-8">
+
+      <section class="app-panel">
+        <div class="app-panel-header">
+          <h2 class="app-panel-title">Anstehende Events</h2>
+          <a href="/events" class="app-panel-link">alle anstehenden Events →</a>
+        </div>
+
+        <div class="app-panel-body">
+          <div class="app-filter mb-4">
+            <a href="/dashboard?eventFilter=all" class="<%= chipClass('all') %>">
+              alle (<%= eventCounts.all %>)
+            </a>
+            <a href="/dashboard?eventFilter=open" class="<%= chipClass('open') %>">
+              offen (<%= eventCounts.open %>)
+            </a>
+            <a href="/dashboard?eventFilter=no_gift" class="<%= chipClass('no_gift') %>">
+              kein Geschenk (<%= eventCounts.no_gift %>)
+            </a>
+            <a href="/dashboard?eventFilter=planning" class="<%= chipClass('planning') %>">
+              in Planung (<%= eventCounts.planning %>)
+            </a>
+            <a href="/dashboard?eventFilter=done" class="<%= chipClass('done') %>">
+              abgeschlossen (<%= eventCounts.done %>)
+            </a>
+          </div>
+
+          <% if (!eventsPreview || eventsPreview.length === 0) { %>
+          <p class="text-sm text-white/80">Keine Events im gewählten Zeithorizont.</p>
+          <% } else { %>
+          <div class="space-y-3">
+            <% eventsPreview.forEach(e => { %>
+            <div class="app-item">
+              <div class="flex items-start justify-between gap-4">
+                <div class="min-w-0">
+                  <a href="/events/<%= e._id %>" class="app-item-title">
+                    <%= e.personOccasion.occasion.icon %>
+                    <%= e.personOccasion.occasion.name %> – <%= e.personOccasion.person.name %>
+                  </a>
+
+                  <p class="app-item-meta">
+                    <%= formatDateShort(e.date) %> · <%= daysText(e.daysUntil) %>
+                  </p>
+
+                  <a href="/persons/<%= e.personOccasion.person._id %>" class="app-item-sub-link">
+                    zur Person →
+                  </a>
+                </div>
+
+                <div class="flex items-center gap-3 shrink-0">
+                  <span class="<%= stateBadgeClasses(e.giftState) %>">
+                    <%= stateLabel(e.giftState) %>
+                  </span>
+                  <input type="checkbox" title="Event abschließen" class="check-on-blue js-complete-event" data-event-id="<%= e._id %>" data-return-to="<%= dashboardReturnTo %>" <%= e.giftState === 'done' ? 'checked disabled' : '' %>>
+                </div>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+          <% } %>
+        </div>
+      </section>
+
+      <section class="app-panel">
+        <div class="app-panel-header">
+          <h2 class="app-panel-title">🗓️ Fehlende Daten für Events</h2>
+          <a href="/todos" class="app-panel-link">alle To-Dos →</a>
+        </div>
+
+        <div class="app-panel-body">
+          <% if (!dateTasksPreview || dateTasksPreview.length === 0) { %>
+          <p class="text-sm text-white/80">Keine offenen fehlende Daten für Events.</p>
+          <% } else { %>
+          <div class="space-y-2">
+            <% dateTasksPreview.forEach(t => { %>
+            <div class="app-item">
+              <p class="text-sm font-semibold text-white"><%= t.title %></p>
+              <% if (t.personOccasion?.person?._id) { %>
+              <a href="/persons/<%= t.personOccasion.person._id %>/occasions" class="app-item-sub-link">
+                zur Person →
+              </a>
+              <% } %>
+            </div>
+            <% }) %>
+          </div>
+          <% } %>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <section class="app-panel mt-10">
+    <div class="app-panel-header">
+      <h2 class="app-panel-title">📊 Übersicht</h2>
+    </div>
+
+    <div class="app-panel-body">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+        <a href="/persons" class="app-item app-item-clickable relative pr-16">
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 text-4xl opacity-90">
+            👤
+          </div>
+
+          <div class="text-sm text-white font-semibold">Personen</div>
+          <div class="text-4xl font-extrabold text-white mt-1"><%= personCount %></div>
+          <div class="app-item-sub-link mt-2">verwalten →</div>
+        </a>
+
+        <a href="/events" class="app-item app-item-clickable relative pr-16">
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 text-4xl opacity-90">
+            🎉
+          </div>
+
+          <div class="text-sm text-white font-semibold">
+            Events (nächste <%= todoMonths %> Monate)
+          </div>
+          <div class="text-4xl font-extrabold text-white mt-1"><%= eventCountHorizon %></div>
+          <div class="app-item-sub-link mt-2">verwalten →</div>
+        </a>
+
+        <a href="/gifts" class="app-item app-item-clickable relative pr-16">
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 text-4xl opacity-90">
+            🎁
+          </div>
+
+          <div class="text-sm text-white font-semibold">Geschenke</div>
+          <div class="text-4xl font-extrabold text-white mt-1"><%= giftCount %></div>
+          <div class="app-item-sub-link mt-2">verwalten →</div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="app-panel mt-8">
+    <div class="app-panel-header">
+      <h2 class="app-panel-title">⚡ Schnellzugriff</h2>
+    </div>
+
+    <div class="app-panel-body">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <a href="/persons/new" class="app-item app-item-clickable text-center">
+          <div class="text-3xl mb-2">👤</div>
+          <div class="font-semibold text-white">Neue Person</div>
+        </a>
+
+        <a href="/gifts/new" class="app-item app-item-clickable text-center">
+          <div class="text-3xl mb-2">🎁</div>
+          <div class="font-semibold text-white">Neues Geschenk</div>
+        </a>
+
+        <a href="/interests/new" class="app-item app-item-clickable text-center">
+          <div class="text-3xl mb-2">💡</div>
+          <div class="font-semibold text-white">Neues Interesse</div>
+        </a>
+
+        <a href="/occasions/new" class="app-item app-item-clickable text-center">
+          <div class="text-3xl mb-2">🎉</div>
+          <div class="font-semibold text-white">Neuer Anlass</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<%- include('partials/app-foot') %>

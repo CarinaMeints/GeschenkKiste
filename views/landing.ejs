@@ -1,0 +1,24 @@
+<%- include('partials/app-head', { title: 'GeschenkKiste', hideNav: true, hideFlash: true }) %>
+
+<section class="app-panel max-w-2xl mx-auto mt-10">
+  <div class="app-panel-header">
+    <a href="/" class="app-brand">
+      <img src="/img/Logo.png" class="h-9 w-9 rounded-lg" alt="Logo">
+      <span>GeschenkKiste</span>
+    </a>
+  </div>
+
+  <div class="app-panel-body">
+    <p class="text-white/90 font-semibold">
+      ✨ Verwalte Geschenke für Geburtstage, Weihnachten und alle anderen Anlässe.
+      Nie wieder doppelte Geschenke oder vergessene Termine ✨
+    </p>
+
+    <div class="mt-6 flex flex-col sm:flex-row gap-3">
+      <a href="/login" class="btn-primary flex-1 justify-center py-3">Login</a>
+      <a href="/register" class="btn-surface flex-1 justify-center py-3">Registrieren</a>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/app-foot') %>
