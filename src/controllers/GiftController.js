@@ -259,6 +259,9 @@ const GiftController = {
 
       const myGiftedCount = usageDoc?.count || 0;
 
+      gift = gift.toObject({ virtuals: true });
+      gift.myGiftedCount = myGiftedCount;
+
       const usageRaw = await GiftAssignment.find({
         gift: gift._id,
         createdBy: userId,
