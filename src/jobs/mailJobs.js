@@ -256,7 +256,7 @@ async function sendMonthlyMailForUser(user, now = new Date()) {
   const { openTasks, pendingAssignments, eventsWithoutGift } =
     await buildTodoDataForUser(user._id, { fromDate, toDate });
 
-  const subject = `GeschenkKiste – To-Dos für ${fromDate.toLocaleDateString("de-DE", { month: "long", year: "numeric" })}`;
+  const subject = `GeschenkKiste – To-Dos für ${fromDate.toLocaleString("de-DE", { month: "long", year: "numeric" })}`;
   const html = renderTodoMailHtml({
     username: user.username,
     title: "📋 Deine To-Dos für den nächsten Monat",
