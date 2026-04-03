@@ -243,7 +243,7 @@ function renderTodoMailHtml({
 
     <hr/>
     <p style="font-size: 12px; color: #666;">
-      Automatisch generiert am ${escapeHtml(new Date().toLocaleString("de-DE"))}
+      Automatisch generiert am ${escapeHtml(new Date().toLocaleDateString("de-DE"))}
     </p>
   </div>
   `;
