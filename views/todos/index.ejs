@@ -1,0 +1,138 @@
+<%- include('../partials/app-head', { title: 'To-Dos – GeschenkKiste' }) %>
+
+<div>
+
+  <div class="mb-8">
+    <h1 class="app-h1">📋 To-Dos</h1>
+    <p class="app-subtle mt-1">
+      Alle offenen Aufgaben · Zeithorizont: <span class="font-semibold"><%= months %> Monate</span>
+      · <a href="/settings" class="app-link">ändern</a>
+    </p>
+  </div>
+
+  <%
+    function formatDateShort(date) {
+      return new Date(date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    }
+    function daysText(d) {
+      if (d == null) return '';
+      if (d === 0) return 'heute';
+      if (d === 1) return 'morgen';
+      return `in ${d} Tagen`;
+    }
+
+    function badgeClass(state) {
+      return state === 'planning' ? 'badge badge-planning' : 'badge badge-no-gift';
+    }
+
+    function badgeLabel(state) {
+      return state === 'planning' ? 'in Planung' : 'offen';
+    }
+
+    function chipClass(key) {
+      return (giftFilter === key)
+        ? 'app-filter-chip app-filter-chip-active'
+        : 'app-filter-chip';
+    }
+
+    const returnTo = '/todos' + (typeof giftFilter !== 'undefined' && giftFilter ? `?giftFilter=${giftFilter}` : '');
+  %>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+    <section class="app-panel">
+      <div class="app-panel-header">
+        <h2 class="app-panel-title">🗓️ Fehlende Daten für Events</h2>
+        <span class="app-panel-count"><%= (dateTasksOpen || []).length %></span>
+      </div>
+
+      <div class="app-panel-body">
+        <% if (!dateTasksOpen || dateTasksOpen.length === 0) { %>
+        <p class="text-sm text-white/80">Keine offenen fehlende Daten für Events.</p>
+        <% } else { %>
+        <div class="space-y-2">
+          <% dateTasksOpen.forEach(t => { %>
+          <div class="app-item">
+            <p class="text-sm font-semibold text-white"><%= t.title %></p>
+
+            <% if (t.personOccasion?._id && t.personOccasion?.person?._id) { %>
+            <div class="mt-1 flex gap-3">
+              <a href="/persons/<%= t.personOccasion.person._id %>/occasions" class="app-item-sub-link">
+                zur Person →
+              </a>
+
+              <a href="/persons/<%= t.personOccasion.person._id %>/occasions/<%= t.personOccasion._id %>/date<%= t.year ? `?year=${t.year}&returnTo=${encodeURIComponent(returnTo)}` : `?returnTo=${encodeURIComponent(returnTo)}` %>" class="app-item-sub-link">
+                Datum eintragen →
+              </a>
+            </div>
+            <% } %>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </section>
+
+    <section class="app-panel">
+      <div class="app-panel-header">
+        <h2 class="app-panel-title">Anstehende Events</h2>
+        <span class="app-panel-count"><%= (counts?.all || 0) %></span>
+      </div>
+
+      <div class="app-panel-body">
+        <div class="app-filter mb-4">
+          <a href="/todos?giftFilter=all" class="<%= chipClass('all') %>">
+            alle (<%= counts.all %>)
+          </a>
+          <a href="/todos?giftFilter=no_gift" class="<%= chipClass('no_gift') %>">
+            kein Geschenk (<%= counts.no_gift %>)
+          </a>
+          <a href="/todos?giftFilter=planning" class="<%= chipClass('planning') %>">
+            in Planung (<%= counts.planning %>)
+          </a>
+        </div>
+
+        <% if (!giftTodos || giftTodos.length === 0) { %>
+        <p class="text-sm text-white/80">Keine anstehenden Events in diesem Filter.</p>
+        <% } else { %>
+        <div class="space-y-3">
+          <% giftTodos.forEach(e => { %>
+          <div class="app-item">
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <a href="/events/<%= e._id %>" class="app-item-title">
+                  <%= e.personOccasion.occasion.icon %>
+                  <%= e.personOccasion.occasion.name %> – <%= e.personOccasion.person.name %>
+                </a>
+
+                <p class="app-item-meta">
+                  <%= formatDateShort(e.date) %> · <%= daysText(e.daysUntil) %>
+                  <% if (e.giftState === 'planning') { %>
+                  · <%= e.assignmentCount %> Idee(n)
+                  <% } %>
+                </p>
+
+                <a href="/persons/<%= e.personOccasion.person._id %>" class="app-item-sub-link">
+                  zur Person →
+                </a>
+              </div>
+
+              <div class="flex items-center gap-3 shrink-0">
+                <span class="<%= badgeClass(e.giftState) %>">
+                  <%= badgeLabel(e.giftState) %>
+                </span>
+
+                <input type="checkbox" title="Event abschließen" class="check-on-blue js-complete-event" data-event-id="<%= e._id %>" data-return-to="<%= returnTo %>">
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<%- include('../partials/app-foot') %>

@@ -1,0 +1,26 @@
+<nav class="app-navbar">
+  <div class="app-navbar-inner">
+    <div class="app-navbar-row">
+
+      <a href="/dashboard" class="app-brand">
+        <img src="/img/Logo.png" class="h-9 w-9 rounded-lg" alt="Logo">
+        <span>GeschenkKiste</span>
+      </a>
+
+      <div class="app-nav">
+        <a href="/persons" class="app-navlink">Personen</a>
+        <a href="/occasions" class="app-navlink">Anlässe</a>
+        <a href="/events" class="app-navlink">Events</a>
+        <a href="/todos" class="app-navlink">To-Dos</a>
+        <a href="/gifts" class="app-navlink">Geschenke</a>
+        <a href="/interests" class="app-navlink">Interessen</a>
+        <a href="/settings" class="app-navlink">Einstellungen</a>
+        <a href="/help?returnTo=<%= encodeURIComponent('/dashboard') %>" class="app-navlink" title="Hilfe">❔</a>
+        <form action="/logout" method="POST" class="inline">
+          <button type="submit" class="app-logout">Logout</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</nav>

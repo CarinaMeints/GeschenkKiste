@@ -1,0 +1,77 @@
+<%- include('../partials/app-head', { title: 'Interessen – GeschenkKiste' }) %>
+
+<%
+  const currentUserId = (currentUser && (currentUser._id || currentUser.id))
+    ? String(currentUser._id || currentUser.id)
+    : null;
+
+  function canEditInterest(i) {
+    if (!i) return false;
+    if (i.isPublic === true) return false;
+    if (!currentUserId) return false;
+
+    const owner = i.createdBy?._id ? i.createdBy._id : i.createdBy;
+    if (!owner) return false;
+    return String(owner) === currentUserId;
+  }
+%>
+
+<div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-8">
+  <div>
+    <h1 class="app-h1">💡 Interessen</h1>
+  </div>
+
+  <a href="/interests/new" class="btn-surface">➕ Neues Interesse</a>
+</div>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Liste</h2>
+    <span class="app-panel-count"><%= (interests || []).length %></span>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (!interests || interests.length === 0) { %>
+    <div class="app-item text-center">
+      <div class="text-6xl mb-3">💡</div>
+      <p class="text-sm text-white/80">Noch keine Interessen vorhanden.</p>
+      <div class="mt-4">
+        <a href="/interests/new" class="btn-surface">Jetzt anlegen →</a>
+      </div>
+    </div>
+    <% } else { %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <% interests.forEach(i => { 
+             const editable = canEditInterest(i);
+        %>
+      <div class="app-item">
+        <div class="flex items-start justify-between gap-3">
+          <a href="/interests/<%= i._id %>" class="min-w-0 block">
+            <div class="text-4xl mb-2"><%= i.icon || '🎁' %></div>
+            <div class="font-semibold text-white truncate"><%= i.name %></div>
+
+            <% if (i.description) { %>
+            <div class="text-xs text-white/80 mt-1 line-clamp-2"><%= i.description %></div>
+            <% } else { %>
+            <div class="text-xs text-white/70 mt-1">Keine Beschreibung</div>
+            <% } %>
+
+            <div class="mt-3 text-xs text-white/80 font-semibold">
+              <%= i.isPublic ? '🌍 Katalog' : 'Eigene Kategorie' %>
+            </div>
+          </a>
+
+          <div class="shrink-0 flex flex-col gap-2">
+            <% if (editable) { %>
+            <a href="/interests/<%= i._id %>/edit" class="btn-surface" title="Bearbeiten">✏️</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/app-foot') %>

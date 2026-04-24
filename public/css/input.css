@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-app-pageBg text-slate-800 font-sans;
+  }
+
+  a {
+    @apply underline-offset-4;
+  }
+
+  summary {
+    list-style: none;
+  }
+
+  summary::marker {
+    content: "";
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer components {
+
+  .app-page { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6; }
+  .app-h1 { @apply text-3xl font-extrabold text-app-navy; }
+  .app-subtle { @apply text-slate-600; }
+
+  .app-navbar { @apply bg-app-navy text-white shadow; }
+  .app-navbar-inner { @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8; }
+  .app-navbar-row { @apply flex h-16 items-center justify-between; }
+  .app-brand { @apply flex items-center gap-3 text-xl font-extrabold tracking-tight text-white; }
+  .app-nav { @apply hidden md:flex md:items-center md:space-x-6; }
+  .app-navlink { @apply text-app-linkOnDark hover:text-white transition font-semibold; }
+  .app-logout { @apply text-app-linkOnDark hover:text-white transition font-semibold; }
+
+  .app-link { @apply text-app-linkOnLight font-semibold hover:underline; }
+  .app-link-on-dark { @apply text-app-linkOnDark font-semibold hover:text-white hover:underline; }
+
+  .app-panel { @apply bg-app-tileOuter text-white rounded-app shadow-app overflow-hidden; }
+  .app-panel-header { @apply px-6 py-4 flex items-center justify-between border-b border-white/15; }
+  .app-panel-title { @apply text-xl font-bold text-white; }
+  .app-panel-body { @apply p-6; }
+  .app-panel-link { @apply app-link-on-dark; }
+  .app-panel-count { @apply text-sm text-white/80 font-semibold; }
+
+  .js-interest-picked { @apply ring-2 ring-indigo-400;}
+
+  .app-item { @apply p-4 rounded-xl border border-white/15 bg-app-tileInner text-white transition; }
+
+  .app-subitem { @apply p-3 rounded-lg border border-white/15 bg-white/10 text-white; }
+  .app-subitem-title { @apply font-semibold text-white truncate; }
+  .app-subitem-meta { @apply text-xs text-white/80 mt-1; }
+  .details-arrow {@apply text-white/80 font-semibold text-sm select-none; }
+  details[open] .details-arrow::before { content: "▾"; }
+  details:not([open]) .details-arrow::before { content: "▸"; }
+  .app-item-clickable { @apply cursor-pointer hover:bg-app-tileHover; }
+  .app-item-title { @apply block font-semibold text-white truncate hover:underline; }
+  .app-item-meta { @apply text-xs text-white/85 mt-1; }
+  .app-item-sub-link { @apply app-link-on-dark text-xs; }
+
+  emoji-picker.app-emoji-picker {
+    width: 100%;
+
+    --num-columns: 8;
+    --emoji-size: 1.65rem;
+
+    --background: #ffffff;
+    --border-color: rgba(15, 23, 42, 0.15);
+
+    --input-border-color: rgba(15, 23, 42, 0.25);
+    --input-font-color: #0f172a;
+    --input-placeholder-color: rgba(15, 23, 42, 0.45);
+    --outline-color: rgba(69, 108, 175, 0.55);
+
+    --category-font-color: rgba(15, 23, 42, 0.8);
+
+    --button-hover-background: rgba(15, 23, 42, 0.06);
+    --button-active-background: rgba(69, 108, 175, 0.12);
+  }
+
+  .app-emoji-picker {
+    border-radius: 14px;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2
+           font-semibold text-white shadow-app transition;
+    background-color: theme("colors.app.navy");
+  }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-primary:active { filter: brightness(0.96); }
+
+  .btn-surface {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2 rounded-lg font-semibold
+           bg-white text-app-navy border border-slate-200 shadow-sm transition;
+  }
+  .btn-surface:hover { @apply bg-slate-50; }
+  .btn-surface:active { @apply bg-slate-100; }
+
+  .app-filter { @apply flex flex-wrap gap-2; }
+  .app-filter-chip {
+    @apply px-3 py-1.5 rounded-full text-xs font-semibold border transition;
+    @apply border-white/15 bg-white/10 text-white/90 hover:bg-white/15 hover:text-white;
+  }
+  .app-filter-chip-active { @apply border-white/30 bg-white/25 text-white; }
+
+  .app-filter-chip-surface {
+    @apply inline-flex items-center gap-2
+           px-3 py-1.5 rounded-full text-xs font-semibold
+           border border-slate-200 bg-white text-app-navy
+           shadow-sm transition;
+  }
+  .app-filter-chip-surface:hover { @apply bg-slate-50; }
+  .app-filter-chip-surface-active { @apply border-slate-300 bg-slate-100; }
+
+  .app-filter-chip-inferred {
+    @apply opacity-60 border-white/10 bg-white/5;
+    @apply border-dashed;
+  }
+
+  .app-filter-chip-inferred:hover {
+    @apply opacity-90 bg-white/10;
+  }
+
+  .check-on-blue {
+    @apply h-5 w-5 rounded border-white/40 bg-white/10 text-white;
+    accent-color: white;
+  }
+
+  .badge { @apply inline-flex items-center justify-center px-3 py-1.5 text-xs font-semibold rounded-full; }
+  .badge-done { @apply badge text-white; background-color: theme("colors.app.statusDone"); }
+  .badge-planning { @apply badge text-slate-900; background-color: theme("colors.app.statusPlanning"); }
+  .badge-no-gift { @apply badge text-white; background-color: theme("colors.app.statusNoGift"); }
+
+  .cal-nav-btn {
+    @apply px-3 py-2 rounded-lg border border-white/15 text-white font-semibold transition;
+    background-color: theme("colors.app.tileInner");
+  }
+  .cal-nav-btn:hover { background-color: theme("colors.app.tileHover"); }
+
+  .cal-dow {
+    @apply text-center py-2 rounded text-xs font-semibold text-white/90;
+    background-color: theme("colors.app.tileInner");
+  }
+
+  .cal-cell {
+    @apply h-28 overflow-hidden rounded border border-white/15 p-2 transition;
+    background-color: theme("colors.app.tileInner");
+  }
+  .cal-cell:hover { background-color: theme("colors.app.tileHover"); }
+
+  .cal-cell-outside {
+    @apply h-28 overflow-hidden rounded border border-white/10 p-2;
+    background-color: theme("colors.app.calOutside");
+  }
+
+  .cal-cell-empty {
+    @apply h-28 rounded border border-white/10;
+    background-color: theme("colors.app.calOutside");
+  }
+
+  .cal-cell-today { @apply ring-2 ring-white/40 border-white/30; }
+  .cal-day-number { @apply text-xs font-bold text-white/90; }
+  .cal-badge { @apply mt-1 px-2 py-1 rounded text-[11px] font-semibold truncate; }
+
+  .app-modal { @apply bg-white text-app-navy overflow-hidden; }
+  .app-modal-header { @apply border-b border-white/10; background-color: #456caf; color: white; }
+  .app-modal-title { @apply text-white; }
+  .app-modal-close { @apply text-white/80 hover:text-white; }
+  .app-modal-btn-primary { @apply btn-primary; background-color: #456caf; }
+
+  .app-modal a { @apply text-app-linkOnLight font-semibold hover:underline; }
+  .app-modal-muted { @apply text-app-navy/75; }
+}

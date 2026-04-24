@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Geburtstag",
+    "description": "Jährlicher Geburtstag",
+    "day": null,
+    "month": null,
+    "isRecurring": true,
+    "icon": "🎂",
+    "isPublic": true,
+    "isBirthday": true
+  },
+  {
+    "name": "Weihnachten",
+    "description": "Heiligabend",
+    "day": 24,
+    "month": 12,
+    "isRecurring": true,
+    "icon": "🎄",
+    "isPublic": true,
+    "isBirthday": false
+  }
+]

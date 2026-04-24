@@ -1,0 +1,470 @@
+<%- include('../partials/app-head', { title: `${person.name} – GeschenkKiste` }) %>
+
+<%
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+  function formatDateShort(date) {
+    return new Date(date).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  function daysText(d) {
+    if (d == null) return '';
+    if (d === 0) return 'heute';
+    if (d === 1) return 'morgen';
+    if (d < 0) return `vor ${Math.abs(d)} Tagen`;
+    return `in ${d} Tagen`;
+  }
+
+  function badgeClass(state) {
+    if (state === 'done') return 'badge badge-done';
+    if (state === 'planning') return 'badge badge-planning';
+    return 'badge badge-no-gift';
+  }
+
+  function badgeLabel(state) {
+    if (state === 'done') return 'abgeschlossen';
+    if (state === 'planning') return 'in Planung';
+    return 'kein Geschenk';
+  }
+
+  function isMovableOccasion(occ) {
+    return !(occ?.day != null && occ?.month != null) && occ?.isBirthday !== true;
+  }
+
+const returnToPerson = '/persons/' + person._id;
+%>
+
+<div class="mb-6">
+  <a href="/persons" class="app-link">← zu allen Personen</a>
+</div>
+
+<section class="app-panel mb-8">
+  <div class="app-panel-header">
+    <h1 class="app-panel-title">👤 <%= person.name %></h1>
+    <div class="flex gap-2">
+      <button type="button" class="btn-surface" data-share-person data-person-id="<%= person._id %>">
+        🔗 Teilen
+      </button>
+
+      <a href="/persons/<%= person._id %>/edit" class="btn-surface">
+        ✏️ Bearbeiten
+      </a>
+
+      <form action="/persons/<%= person._id %>" method="POST" data-pc-confirm data-pc-title="Person wirklich löschen?" data-pc-message="Möchtest du „<%= person.name %>“ wirklich löschen? Alle zugehörigen Anlässe, Events und Geschenk-Zuordnungen werden ebenfalls entfernt." data-pc-ok="Ja, löschen">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn-surface" style="border-color:#fecaca;color:#b91c1c;">
+          🗑️
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="app-panel-body">
+    <% if (person.hasBirthday) { %>
+    <p class="text-white/90 font-semibold mb-3">
+      🎂 <%= person.birthdayDay %>. <%= months[(person.birthdayMonth || 1) - 1] %>
+    </p>
+    <% } %>
+    <div class="app-filter mb-4">
+      <% (person.interests || []).forEach(interest => { %>
+      <a href="/interests/<%= interest._id %>" class="app-filter-chip">
+        <%= interest.icon %> <%= interest.name %>
+      </a>
+      <% }) %>
+
+      <% if (typeof inferredInterests !== 'undefined' && inferredInterests.length > 0) { %>
+      <% inferredInterests.forEach(i => { %>
+      <form class="inline" action="/persons/<%= person._id %>/interests/<%= i._id %>?returnTo=<%= encodeURIComponent(returnToPerson) %>" method="POST" data-pc-confirm data-pc-title="Interesse übernehmen?" data-pc-message="„<%= i.name %>“ als Interesse für <%= person.name %> übernehmen?" data-pc-ok="Übernehmen">
+        <button type="submit" class="app-filter-chip app-filter-chip-inferred" title="Abgeleitet – klicken zum Übernehmen">
+          <%= i.icon || '🎁' %> <%= i.name %>
+          <span class="ml-1 text-xs font-extrabold opacity-90">＋</span>
+        </button>
+      </form>
+      <% }) %>
+      <% } %>
+
+      <a href="/persons/<%= person._id %>/edit" class="app-filter-chip">
+        ➕ Interessen bearbeiten
+      </a>
+    </div>
+
+    <% if (person.notes) { %>
+    <div class="app-item">
+      <p class="text-sm font-semibold text-white mb-1">Notizen</p>
+      <p class="text-sm text-white/90"><%= person.notes %></p>
+    </div>
+    <% } %>
+
+    <div id="shareUrlContainer" class="hidden mt-4 app-item">
+      <p class="text-sm font-semibold text-white mb-2">Teilbarer Link</p>
+
+      <div class="flex flex-col sm:flex-row gap-2">
+        <input type="text" id="shareUrl" readonly class="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-lg bg-white text-slate-900">
+        <button type="button" class="btn-surface" data-share-copy>
+          Kopieren
+        </button>
+        <a id="shareUrlLink" href="#" target="_blank" class="btn-primary">
+          Öffnen
+        </a>
+      </div>
+
+      <p class="text-xs text-white/80 mt-2">
+        Alle mit diesem Link können die Personenseite sehen.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+  <section class="app-panel lg:col-span-1" id="history">
+    <div class="app-panel-header">
+      <div class="flex items-center gap-3">
+        <h2 class="app-panel-title">🎁 Geschenk-Historie</h2>
+
+        <button type="button" class="btn-surface" title="Geschenk zur Historie hinzufügen" data-ph-open>
+          ➕
+        </button>
+      </div>
+
+      <span class="app-panel-count"><%= (giftHistory || []).length %></span>
+    </div>
+
+    <div class="app-panel-body">
+      <% if (!giftHistory || giftHistory.length === 0) { %>
+      <p class="text-sm text-white/80">Noch keine Geschenke verschenkt.</p>
+      <% } else { %>
+      <div class="space-y-3">
+        <% giftHistory.forEach(item => { %>
+        <div class="app-item">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <a href="/gifts/<%= item.gift?._id %>" class="app-item-title">
+                <%= item.gift?.title || 'Geschenk' %>
+              </a>
+
+              <p class="app-item-meta">
+                <%= item.event?.personOccasion?.occasion?.name || 'Anlass' %>
+                · <%= item.event?.year || '' %>
+                · <%= item.event?.date ? formatDateShort(item.event.date) : '' %>
+              </p>
+
+              <% if (item.notes) { %>
+              <p class="text-xs text-white/85 mt-2">💬 <%= item.notes %></p>
+              <% } %>
+            </div>
+
+            <a href="/events/<%= item.event?._id %>" class="app-item-sub-link">
+              Event →
+            </a>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </section>
+  <div class="lg:col-span-2 space-y-6">
+
+    <section class="app-panel">
+      <div class="app-panel-header">
+        <h2 class="app-panel-title">🎉 Anlässe</h2>
+        <a href="/persons/<%= person._id %>/occasions" class="app-panel-link">verwalten →</a>
+      </div>
+
+      <div class="app-panel-body">
+        <% if (!personOccasions || personOccasions.length === 0) { %>
+        <p class="text-sm text-white/80">Noch keine Anlässe zugeordnet.</p>
+        <% } else { %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <% personOccasions.forEach(po => { %>
+          <div class="app-item">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <p class="font-semibold text-white truncate">
+                  <%= po.occasion?.icon || '🎉' %> <%= po.occasion?.name || 'Anlass' %>
+                </p>
+
+                <p class="app-item-meta">
+                  <% if (po.occasion?.day && po.occasion?.month) { %>
+                  <%= po.occasion.day %>. <%= months[(po.occasion.month || 1) - 1] %>
+                  <% } else if (po.occasion?.isBirthday && person.hasBirthday) { %>
+                  <%= person.birthdayDay %>. <%= months[(person.birthdayMonth || 1) - 1] %>
+                  <% } else if (po.customDay && po.customMonth && po.customYear) { %>
+                  <%= po.customDay %>. <%= months[(po.customMonth || 1) - 1] %> (<%= po.customYear %>)
+                  <% } else { %>
+                  beweglich
+                  <% } %>
+                </p>
+
+                <div class="mt-2 flex flex-wrap gap-2">
+                  <% if (po.startYear) { %>
+                  <span class="badge badge-planning">ab <%= po.startYear %></span>
+                  <% } %>
+
+                  <% if (po.endYear) { %>
+                  <span class="badge badge-done">bis <%= po.endYear %></span>
+                  <% } else { %>
+                  <span class="badge badge-done">unbegrenzt</span>
+                  <% } %>
+                </div>
+              </div>
+
+              <% if (isMovableOccasion(po.occasion)) { %>
+              <a href="/persons/<%= person._id %>/occasions/<%= po._id %>/date?year=<%= new Date().getFullYear() %>&returnTo=<%= encodeURIComponent(returnToPerson) %>" class="btn-surface" title="Datum bearbeiten">
+                ✏️ Datum
+              </a>
+              <% } %>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </section>
+
+    <section class="app-panel">
+      <div class="app-panel-header">
+        <div>
+          <h2 class="app-panel-title">📅 Anstehende Events</h2>
+          <p class="text-xs text-white/80">Zeithorizont: <%= todoMonths %> Monate</p>
+        </div>
+
+        <a href="/events" class="app-panel-link">alle Events →</a>
+      </div>
+
+      <div class="app-panel-body">
+        <% if (!upcomingEvents || upcomingEvents.length === 0) { %>
+        <p class="text-sm text-white/80">Keine anstehenden Events im Zeithorizont.</p>
+        <% } else { %>
+        <div class="space-y-3">
+          <% upcomingEvents.forEach(ev => { %>
+          <div class="app-item">
+            <div class="flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <a href="/events/<%= ev._id %>?returnTo=<%= encodeURIComponent(returnToPerson) %>" class="app-item-title">
+                  <%= ev.personOccasion?.occasion?.icon || '🎉' %>
+                  <%= ev.personOccasion?.occasion?.name || 'Event' %>
+                </a>
+
+                <p class="app-item-meta">
+                  <%= formatDateShort(ev.date) %> · <%= daysText(ev.daysUntil) %>
+                  <% if (ev.giftState === 'planning') { %>
+                  · <%= ev.assignmentCount %> Idee(n)
+                  <% } %>
+                </p>
+
+                <% if (ev.assignments && ev.assignments.length > 0) { %>
+                <div class="mt-2 space-y-1">
+                  <% ev.assignments.forEach(a => { %>
+                  <div class="text-xs text-white/90">
+                    🎁
+                    <a href="/gifts/<%= a.gift?._id %>" class="app-link-on-dark">
+                      <%= a.gift?.title || 'Geschenk' %>
+                    </a>
+                    <span class="text-white/80">(<%= a.status %>)</span>
+                  </div>
+                  <% }) %>
+                </div>
+                <% } %>
+              </div>
+
+              <div class="flex items-center gap-3 shrink-0">
+                <span class="<%= badgeClass(ev.giftState) %>">
+                  <%= badgeLabel(ev.giftState) %>
+                </span>
+
+                <a href="/events/<%= ev._id %>?returnTo=<%= encodeURIComponent(returnToPerson) %>" class="btn-surface" title="Event anzeigen">
+                  ✏️
+                </a>
+
+                <input type="checkbox" title="Event abschließen" class="check-on-blue js-complete-event" data-event-id="<%= ev._id %>" data-return-to="<%= returnToPerson %>" <%= ev.giftState === 'done' ? 'checked disabled' : '' %>>
+              </div>
+            </div>
+          </div>
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="fixed inset-0 hidden items-center justify-center bg-black/50 z-50" data-pc-modal>
+  <div class="app-modal w-full max-w-lg rounded-xl shadow-xl mx-4">
+    <div class="app-modal-header px-6 py-4 flex items-center justify-between">
+      <h3 class="app-modal-title text-lg font-bold" data-pc-title>Bestätigen</h3>
+      <button type="button" class="app-modal-close text-xl font-bold" data-pc-close>×</button>
+    </div>
+
+    <div class="p-6 space-y-4">
+      <p class="text-sm text-slate-700 font-semibold" data-pc-message>
+        Möchtest du das wirklich tun?
+      </p>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <button type="button" class="btn-surface" data-pc-cancel>Abbrechen</button>
+        <button type="button" class="btn-primary" data-pc-ok>Bestätigen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="fixed inset-0 hidden items-center justify-center bg-black/50 z-50" data-ph-modal>
+  <div class="app-modal w-full max-w-lg rounded-xl shadow-xl mx-4 max-h-[90vh] overflow-y-auto">
+    <div class="app-modal-header px-6 py-4 flex items-center justify-between">
+      <h3 class="app-modal-title text-lg font-bold">Historie hinzufügen</h3>
+      <button type="button" class="app-modal-close text-xl font-bold" data-ph-close>×</button>
+    </div>
+
+    <form class="p-6 space-y-4" method="POST" action="/persons/<%= person._id %>/history" data-ph-form data-ph-bday-day="<%= person.birthdayDay || '' %>" data-ph-bday-month="<%= person.birthdayMonth || '' %>">
+
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Anlass *</label>
+        <select name="occasionId" required class="w-full px-3 py-2 border border-slate-300 rounded-lg" data-ph-occasion>
+          <option value="">– wählen –</option>
+
+          <% (allOccasionsForHistory || []).forEach(o => { %>
+          <option value="<%= o._id %>" data-day="<%= (o.day != null) ? o.day : '' %>" data-month="<%= (o.month != null) ? o.month : '' %>" data-is-birthday="<%= o.isBirthday ? 'true' : 'false' %>">
+            <%= o.icon || '🎉' %> <%= o.name %>
+          </option>
+          <% }) %>
+        </select>
+
+        <label class="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+          <input type="checkbox" name="onlyThisYear" value="true" checked>
+          Nur für dieses Jahr (verhindert, dass der Anlass künftig automatisch auftaucht)
+        </label>
+      </div>
+
+      <div class="border-t border-slate-200 pt-4 space-y-2">
+
+        <div data-ph-date-free-wrap>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Datum *</label>
+          <input type="date" class="w-full px-3 py-2 border border-slate-300 rounded-lg" data-ph-date-free>
+          <p class="text-xs text-slate-500 mt-1">Für bewegliche Anlässe frei wählbar.</p>
+        </div>
+
+        <div class="hidden" data-ph-date-fixed-wrap>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Datum *</label>
+
+          <div class="flex items-center justify-between gap-3">
+            <div class="text-sm font-semibold text-slate-800">
+              <span data-ph-fixed-label>–</span>
+              <span class="text-slate-500 font-semibold">(Tag/Monat fix)</span>
+            </div>
+
+            <div class="w-36">
+              <input type="number" min="1900" max="9999" placeholder="Jahr" class="w-full px-3 py-2 border border-slate-300 rounded-lg" data-ph-year>
+            </div>
+          </div>
+
+          <p class="text-xs text-slate-500 mt-1">Jahr ergänzen, Tag/Monat sind beim Anlass fest.</p>
+        </div>
+
+        <p class="text-xs text-red-700 font-semibold hidden" data-ph-date-hint></p>
+        <input type="hidden" name="date" data-ph-date-final>
+      </div>
+
+      <div class="border-t border-slate-200 pt-4 space-y-3">
+        <p class="text-sm font-semibold text-slate-800">Geschenk *</p>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Vorhandenes Geschenk</label>
+          <select name="giftId" class="w-full px-3 py-2 border border-slate-300 rounded-lg" data-ph-gift-select>
+            <option value="">– laden… –</option>
+          </select>
+          <p class="text-xs text-slate-500 mt-1">Oder unten ein neues Geschenk erstellen.</p>
+        </div>
+
+        <details class="border border-slate-200 rounded-lg p-3">
+          <summary class="cursor-pointer font-semibold text-slate-800">
+            ➕ Neues Geschenk erstellen
+          </summary>
+
+          <div class="mt-3 space-y-3">
+            <div class="grid grid-cols-1 gap-2">
+              <label class="block text-sm font-medium text-slate-700">Neues Geschenk</label>
+              <input type="text" name="newGiftTitle" class="w-full px-3 py-2 border border-slate-300 rounded-lg" placeholder="Titel (Pflicht für neues Geschenk)">
+              <input type="text" name="newGiftDescription" class="w-full px-3 py-2 border border-slate-300 rounded-lg" placeholder="Beschreibung (optional)">
+              <input type="url" name="newGiftLink" class="w-full px-3 py-2 border border-slate-300 rounded-lg" placeholder="Link (optional)">
+            </div>
+
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" name="newGiftIsPublic" value="true" class="mt-0.5">
+              <div>
+                <span class="text-sm font-semibold text-slate-800 block">🌍 Geschenk öffentlich machen</span>
+                <p class="text-xs text-slate-500">Wenn aktiviert, wird das neue Geschenk öffentlich (Katalog).</p>
+              </div>
+            </label>
+
+            <div class="space-y-2" data-ph-interests-wrap>
+              <label class="block text-sm font-medium text-slate-700">
+                Interessenskategorien
+              </label>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 border border-slate-200 rounded-lg p-3 bg-slate-50 max-h-48 overflow-y-auto" data-ph-interests-list>
+                <div class="text-sm text-slate-500">lädt…</div>
+              </div>
+
+              <div class="p-3 rounded-lg border border-dashed border-slate-300 bg-white">
+                <p class="text-sm font-semibold text-slate-700 mb-2">➕ Neue Kategorie direkt anlegen</p>
+                <div class="flex gap-2 items-center">
+                  <input type="text" class="flex-1 px-3 py-2 text-sm border border-slate-300 rounded-lg" placeholder="Name (z.B. Technik)" name="newInterestName" data-ph-new-interest-name>
+
+                  <%- include('../partials/icon-picker-field', {
+                    name: 'newInterestIcon',
+                    value: '',
+                    fallback: '🎁',
+                    inputClass: 'w-20 px-3 py-2 text-sm border border-slate-300 rounded-lg text-center',
+                    extraInputAttrs: 'data-ph-new-interest-icon'
+                  }) %>
+                </div>
+
+                <label class="mt-3 flex items-start gap-3 cursor-pointer">
+                  <input type="checkbox" name="newInterestIsPublic" value="true" class="mt-0.5">
+                  <div>
+                    <span class="text-sm font-semibold text-slate-800 block">🌍 Interesse öffentlich machen</span>
+                    <p class="text-xs text-slate-500">Wenn aktiviert, wird das neue Interesse öffentlich (Katalog).</p>
+                  </div>
+                </label>
+
+                <p class="text-xs text-slate-500 mt-2">
+                  Wird beim Speichern erstellt und dem neuen Geschenk zugewiesen.
+                </p>
+              </div>
+
+              <p class="text-xs text-slate-500">
+                Hinweis: Interessen werden nur genutzt, wenn du ein <b>neues Geschenk</b> erstellst.
+              </p>
+            </div>
+          </div>
+        </details>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Notiz</label>
+          <input type="text" name="notes" class="w-full px-3 py-2 border border-slate-300 rounded-lg" placeholder="z.B. gekauft bei…, Farbe, etc.">
+        </div>
+
+        <p class="text-xs text-slate-500">
+          Hinweis: Du musst entweder ein vorhandenes Geschenk wählen oder ein neues Geschenk (Titel) eintragen.
+        </p>
+      </div>
+
+      <p class="text-sm text-red-700 font-semibold hidden" data-ph-error></p>
+
+      <div class="flex justify-end gap-3 pt-2">
+        <button type="button" class="btn-surface" data-ph-cancel>Abbrechen</button>
+        <button type="submit" class="btn-primary" data-ph-submit>Hinzufügen</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script src="/js/person-show.js" defer></script>
+<script src="/js/person-confirm.js" defer></script>
+<script src="/js/person-history.js" defer></script>
+
+<%- include('../partials/app-foot') %>

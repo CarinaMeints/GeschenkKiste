@@ -1,0 +1,64 @@
+<%
+  const title = locals.title || '📅 Kalender';
+  const showToday = locals.showToday ?? false;
+
+  const headerLinkHref = locals.headerLinkHref || null;
+  const headerLinkText = locals.headerLinkText || null;
+
+  const returnTo = locals.returnTo || '/events/calendar';
+%>
+
+<section class="app-panel" data-calendar data-cal-api="/api/calendar/month" data-return-to="<%= returnTo %>">
+
+  <div class="app-panel-header">
+    <div class="flex items-center gap-3">
+      <h2 class="app-panel-title"><%= title %></h2>
+    </div>
+
+    <% if (headerLinkHref && headerLinkText) { %>
+    <a href="<%= headerLinkHref %>" class="app-panel-link"><%= headerLinkText %></a>
+    <% } %>
+  </div>
+
+  <div class="app-panel-body">
+    <div class="flex items-center justify-between mb-4">
+      <button type="button" class="cal-nav-btn" data-cal-prev>←</button>
+
+      <div class="flex items-center gap-3">
+        <div class="text-xl font-extrabold text-white" data-cal-title></div>
+        <% if (showToday) { %>
+        <button type="button" class="btn-primary" data-cal-today>Heute</button>
+        <% } %>
+      </div>
+
+      <button type="button" class="cal-nav-btn" data-cal-next>→</button>
+    </div>
+
+    <div class="grid grid-cols-7 gap-2 mb-2">
+      <% ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(d => { %>
+      <div class="cal-dow"><%= d %></div>
+      <% }) %>
+    </div>
+
+    <div class="grid grid-cols-7 gap-2" data-cal-grid></div>
+    <br>
+
+    <p class="text-xs">
+      Farben:
+      <span class="badge badge-no-gift">kein Geschenk</span>
+      <span class="badge badge-planning">in Planung</span>
+      <span class="badge badge-done">abgeschlossen</span>
+    </p>
+  </div>
+
+  <div class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 items-center justify-center p-4" data-cal-modal>
+    <div class="app-modal rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="app-modal-header sticky top-0 px-6 py-4 flex justify-between items-center">
+        <h3 class="app-modal-title text-xl font-bold" data-cal-modal-title></h3>
+        <button type="button" class="app-modal-close text-2xl leading-none" data-cal-modal-close>×</button>
+      </div>
+
+      <div class="p-6" data-cal-modal-content></div>
+    </div>
+  </div>
+</section>

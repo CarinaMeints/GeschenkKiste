@@ -1,0 +1,39 @@
+<%
+  const name = locals.name;
+
+  const value = (locals.value != null && String(locals.value).trim())
+    ? String(locals.value).trim()
+    : (locals.fallback || '🎁');
+
+  const inputClass = locals.inputClass
+    || 'w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-slate-300';
+
+  const buttonClass = locals.buttonClass || 'btn-surface';
+  const placeholder = locals.placeholder || '';
+  const title = locals.title || 'Icon wählen';
+  const extraInputAttrs = locals.extraInputAttrs || '';
+%>
+
+<div class="relative" data-icon-picker>
+
+  <div class="flex gap-2 items-stretch">
+    <input type="text" name="<%= name %>" value="<%= value %>" placeholder="<%= placeholder %>" class="<%= inputClass %> text-center" data-icon-input <%- extraInputAttrs %> readonly>
+
+    <button type="button" class="<%= buttonClass %> px-3" data-icon-open title="<%= title %>">
+      😊
+    </button>
+  </div>
+
+  <div class="hidden fixed inset-0 z-[2000] bg-black/60 p-4 items-center justify-center" data-icon-panel>
+    <div class="app-modal rounded-xl shadow-xl overflow-hidden w-[640px] max-w-[96vw]">
+      <div class="app-modal-header px-4 py-3 flex items-center justify-between">
+        <div class="font-bold text-white">Icon auswählen</div>
+        <button type="button" class="app-modal-close text-xl font-bold" data-icon-close>×</button>
+      </div>
+
+      <div class="p-4 bg-white max-h-[86vh] overflow-y-auto">
+        <emoji-picker class="app-emoji-picker"></emoji-picker>
+      </div>
+    </div>
+  </div>
+</div>

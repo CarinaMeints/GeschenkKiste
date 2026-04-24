@@ -1,0 +1,1208 @@
+[
+  {
+    "title": "Bluetooth Kopfhörer",
+    "description": "Kabellose Kopfhörer für unterwegs, ideal für Musik, Gaming und Reisen",
+    "interests": ["Technik & Gadgets", "Musik hören (Vinyl, Playlists)", "Gaming"],
+    "isPublic": true
+  },
+  {
+    "title": "E Book Reader",
+    "description": "E-Reader zum komfortablen Lesen von Büchern und E-Books",
+    "interests": ["Technik & Gadgets", "Lesen & Bücher"],
+    "isPublic": true
+  },
+  {
+    "title": "Fitness Tracker",
+    "description": "Fitness-Tracker zur Aktivitäts- und Gesundheitsmessung",
+    "interests": ["Technik & Gadgets", "Sport & Fitness"],
+    "isPublic": true
+  },
+  {
+    "title": "Smart Home Steckdose",
+    "description": "Smarthome-Steckdose zum Schalten von Geräten per App/Timer",
+    "interests": ["Technik & Gadgets", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Powerbank",
+    "description": "Mobile Powerbank zum Laden von Smartphone & Gadgets unterwegs",
+    "interests": ["Technik & Gadgets", "Reisen & Urlaub", "Wandern & Outdoor"],
+    "isPublic": true
+  },
+  {
+    "title": "Mini Beamer",
+    "description": "Kompakter Mini-Beamer für Filme, Serien oder Präsentationen",
+    "interests": ["Technik & Gadgets", "Filme & Serien"],
+    "isPublic": true
+  },
+  {
+    "title": "Mini-Musikbox für unterwegs",
+    "description": "Kleine Musikbox/Lautsprecher für unterwegs",
+    "interests": ["Technik & Gadgets", "Musik hören (Vinyl, Playlists)", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Werkzeugkoffer",
+    "description": "Umfangreicher Werkzeugkoffer für Haushalt, Handwerk und Projekte",
+    "interests": ["Tüfteln (Modellbau, DIY-Tech)", "Handwerk"],
+    "isPublic": true
+  },
+  {
+    "title": "Modellbau Bausatz",
+    "description": "Modellbau-Bausatz zum Bauen und Basteln",
+    "interests": ["Tüfteln (Modellbau, DIY-Tech)", "Kreativität & DIY"],
+    "isPublic": true
+  },
+  {
+    "title": "Elektronik Starterkit",
+    "description": "Elektronik-Starterkit für erste DIY-Tech-Projekte",
+    "interests": ["Tüfteln (Modellbau, DIY-Tech)", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Lötset für Einsteiger",
+    "description": "Lötset für Einsteiger inkl. Zubehör",
+    "interests": ["Tüfteln (Modellbau, DIY-Tech)", "Technik & Gadgets", "Handwerk"],
+    "isPublic": true
+  },
+  {
+    "title": "Mini Drohnen Bausatz",
+    "description": "Mini-Drohnen-Bausatz zum Zusammenbauen und Ausprobieren",
+    "interests": ["Tüfteln (Modellbau, DIY-Tech)", "Technik & Gadgets", "Fotografie"],
+    "isPublic": true
+  },
+  {
+    "title": "Präzisions Schraubendreher Set",
+    "description": "Präzisions-Schraubendreher-Set für Technik und feine Reparaturen",
+    "interests": ["Tüfteln (Modellbau, DIY-Tech)", "Technik & Gadgets", "Handwerk"],
+    "isPublic": true
+  },
+  {
+    "title": "Yoga Matte",
+    "description": "Yoga-Matte für Training, Dehnung und Entspannung",
+    "interests": ["Sport & Fitness", "Spiritualität", "Wellness & Entspannung"],
+    "isPublic": true
+  },
+  {
+    "title": "Widerstandsband Set",
+    "description": "Widerstandsband-Set für Home-Workouts und Krafttraining",
+    "interests": ["Sport & Fitness"],
+    "isPublic": true
+  },
+  {
+    "title": "Massagepistole",
+    "description": "Massagepistole zur Muskelentspannung nach Sport oder im Alltag",
+    "interests": ["Sport & Fitness", "Wellness & Entspannung"],
+    "isPublic": true
+  },
+  {
+    "title": "Sporttasche",
+    "description": "Sporttasche für Training, Fitnessstudio oder Sportverein",
+    "interests": ["Sport & Fitness"],
+    "isPublic": true
+  },
+  {
+    "title": "Trinkflasche",
+    "description": "Praktische Trinkflasche für Sport, Alltag und unterwegs",
+    "interests": ["Sport & Fitness", "Wandern & Outdoor", "Tanzen"],
+    "isPublic": true
+  },
+  {
+    "title": "Thermosflasche / Thermobecher",
+    "description": "Thermosflasche oder Thermobecher für warme/kalte Getränke unterwegs",
+    "interests": ["Wandern & Outdoor", "Sport & Fitness", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Wanderrucksack",
+    "description": "Wanderrucksack für Tageswanderungen und Outdoor-Trips",
+    "interests": ["Wandern & Outdoor", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Merino Wandersocken",
+    "description": "Merino-Wandersocken für Komfort und warme Füße",
+    "interests": ["Wandern & Outdoor"],
+    "isPublic": true
+  },
+  {
+    "title": "Regenponcho / leichte Regenjacke",
+    "description": "Regenponcho oder leichte Regenjacke für wechselhaftes Wetter",
+    "interests": ["Wandern & Outdoor", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Picknickdecke",
+    "description": "Picknickdecke für Outdoor, Park und Ausflüge",
+    "interests": ["Wandern & Outdoor", "Freizeitparks & Erlebnisse"],
+    "isPublic": true
+  },
+  {
+    "title": "Drybag (wasserdichter Packsack)",
+    "description": "Wasserdichter Packsack zum Schutz von Wertsachen und Kleidung",
+    "interests": ["Wassersport", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Wasserdichte Handyhülle",
+    "description": "Wasserdichte Handyhülle für Strand, See und Wassersport",
+    "interests": ["Wassersport"],
+    "isPublic": true
+  },
+  {
+    "title": "Schnorchel Set",
+    "description": "Schnorchel-Set für Urlaub und Wassersport",
+    "interests": ["Wassersport"],
+    "isPublic": true
+  },
+  {
+    "title": "Microfaser Handtuch",
+    "description": "Schnelltrocknendes Microfaser-Handtuch für Sport und Reisen",
+    "interests": ["Wassersport", "Reisen & Urlaub", "Sport & Fitness"],
+    "isPublic": true
+  },
+  {
+    "title": "Sonnenbrille mit Polarisation",
+    "description": "Polarisierte Sonnenbrille für klare Sicht bei Sonne und Wasser",
+    "interests": ["Wassersport", "Wandern & Outdoor", "Autos", "Motorräder"],
+    "isPublic": true
+  },
+  {
+    "title": "Schwimmbrille",
+    "description": "Schwimmbrille für Training im Pool oder offene Gewässer",
+    "interests": ["Wassersport"],
+    "isPublic": true
+  },
+  {
+    "title": "Kochbuch",
+    "description": "Kochbuch mit Rezepten und Inspiration für neue Gerichte",
+    "interests": ["Kochen", "Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Gewürz Probier Set",
+    "description": "Gewürz-Probierset zum Verfeinern von Gerichten",
+    "interests": ["Kochen", "Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Hochwertiges Kochmesser",
+    "description": "Hochwertiges Kochmesser für präzises Schneiden",
+    "interests": ["Kochen"],
+    "isPublic": true
+  },
+  {
+    "title": "Gusseisen Pfanne",
+    "description": "Gusseisenpfanne für langlebiges Braten und Rösten",
+    "interests": ["Kochen", "Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Kochkurs Gutschein",
+    "description": "Gutschein für einen Kochkurs (online oder vor Ort)",
+    "interests": ["Kochen", "Genuss (Food, Wein, Feinkost)", "Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Küchen-Thermometer",
+    "description": "Küchen-Thermometer zum Garen und Backen",
+    "interests": ["Kochen", "Backen"],
+    "isPublic": true
+  },
+  {
+    "title": "Schneidebretter",
+    "description": "Schneidebretter-Set für Küche und Zubereitung",
+    "interests": ["Kochen"],
+    "isPublic": true
+  },
+  {
+    "title": "Dipschalen-Set",
+    "description": "Dipschalen-Set für Snacks, Tapas und Saucen",
+    "interests": ["Kochen", "Wohnen & Deko", "Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Backform Set",
+    "description": "Backform-Set für Kuchen, Brot und Gebäck",
+    "interests": ["Backen"],
+    "isPublic": true
+  },
+  {
+    "title": "Spritzbeutel + Tüllen Set",
+    "description": "Spritzbeutel mit Tüllen für Deko und Torten",
+    "interests": ["Backen"],
+    "isPublic": true
+  },
+  {
+    "title": "Küchenwaage",
+    "description": "Digitale Küchenwaage für präzises Abwiegen",
+    "interests": ["Backen", "Kochen"],
+    "isPublic": true
+  },
+  {
+    "title": "Backbuch",
+    "description": "Backbuch mit Rezepten und Ideen",
+    "interests": ["Backen"],
+    "isPublic": true
+  },
+  {
+    "title": "Ausstechformen Set",
+    "description": "Ausstechformen-Set für Plätzchen und Kekse",
+    "interests": ["Backen"],
+    "isPublic": true
+  },
+  {
+    "title": "Teigschaber /Backhelfer Set",
+    "description": "Teigschaber- und Backhelfer-Set für die Backstube",
+    "interests": ["Backen"],
+    "isPublic": true
+  },
+  {
+    "title": "Buchgutschein",
+    "description": "Gutschein für Bücher im Buchhandel oder online",
+    "interests": ["Lesen & Bücher"],
+    "isPublic": true
+  },
+  {
+    "title": "Leselampe (Klemm /Bettleuchte)",
+    "description": "Klemm- oder Bettleuchte fürs Lesen",
+    "interests": ["Lesen & Bücher", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Buchstützen (Book Nook)",
+    "description": "Buchstützen oder Book-Nook-Deko für das Bücherregal",
+    "interests": ["Lesen & Bücher", "Wohnen & Deko", "Kunst & Design"],
+    "isPublic": true
+  },
+  {
+    "title": "Lesezeichen Set",
+    "description": "Lesezeichen-Set für Bücher und Notizbücher",
+    "interests": ["Lesen & Bücher", "Schreiben (Poetry, Journaling)"],
+    "isPublic": true
+  },
+  {
+    "title": "Bücher Abo",
+    "description": "Bücher-Abo (monatliche Buchbox oder Abo-Service)",
+    "interests": ["Lesen & Bücher"],
+    "isPublic": true
+  },
+  {
+    "title": "Hörbuch Abo (Gutschein)",
+    "description": "Hörbuch-Abo-Gutschein für unterwegs",
+    "interests": ["Lesen & Bücher", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Notizbuch",
+    "description": "Notizbuch für Journaling, Notizen oder Poetry",
+    "interests": ["Schreiben (Poetry, Journaling)", "Spiritualität"],
+    "isPublic": true
+  },
+  {
+    "title": "Füller / Fineliner Set",
+    "description": "Füller oder Fineliner-Set für Schreiben und Skizzen",
+    "interests": ["Schreiben (Poetry, Journaling)", "Kreativität & DIY"],
+    "isPublic": true
+  },
+  {
+    "title": "Journaling Starterset (Stifte, Sticker, Washi Tape)",
+    "description": "Journaling-Set mit Stiften, Stickern und Washi Tape",
+    "interests": ["Schreiben (Poetry, Journaling)", "Kreativität & DIY"],
+    "isPublic": true
+  },
+  {
+    "title": "Kalligrafie Set",
+    "description": "Kalligrafie-Set für Lettering und schöne Schrift",
+    "interests": ["Schreiben (Poetry, Journaling)", "Kreativität & DIY"],
+    "isPublic": true
+  },
+  {
+    "title": "Schreibkurs Gutschein",
+    "description": "Gutschein für Schreibkurs/Workshop",
+    "interests": ["Schreiben (Poetry, Journaling)", "Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Schreibtisch Organizer",
+    "description": "Organizer für Stifte, Papier und Schreibtisch-Zubehör",
+    "interests": ["Schreiben (Poetry, Journaling)", "Wohnen & Deko", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Gaming Maus",
+    "description": "Gaming-Maus für PC- oder Laptop-Gaming",
+    "interests": ["Gaming", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Gaming Headset",
+    "description": "Gaming-Headset mit Mikrofon",
+    "interests": ["Gaming", "Technik & Gadgets", "Musik hören (Vinyl, Playlists)"],
+    "isPublic": true
+  },
+  {
+    "title": "Gaming Mauspad (XL)",
+    "description": "Großes Mauspad (XL) fürs Gaming-Setup",
+    "interests": ["Gaming", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Controller (für PC/Konsole)",
+    "description": "Controller für PC oder Konsole",
+    "interests": ["Gaming", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Gutschein für Games",
+    "description": "Gutschein für Games (Store-Guthaben)",
+    "interests": ["Gaming"],
+    "isPublic": true
+  },
+  {
+    "title": "Headset Ständer",
+    "description": "Ständer zur Aufbewahrung eines Headsets",
+    "interests": ["Gaming", "Technik & Gadgets", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Controller Dock",
+    "description": "Dock/Ladestation für Controller",
+    "interests": ["Gaming", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Party Kartenspiel",
+    "description": "Party-Kartenspiel für Spieleabende",
+    "interests": ["Gesellschaftsspiele & Brettspiele"],
+    "isPublic": true
+  },
+  {
+    "title": "Strategiebrettspiel",
+    "description": "Strategiebrettspiel für längere Spieleabende",
+    "interests": ["Gesellschaftsspiele & Brettspiele"],
+    "isPublic": true
+  },
+  {
+    "title": "Escape Game für Zuhause",
+    "description": "Escape-Game für Zuhause (Rätselbox)",
+    "interests": ["Gesellschaftsspiele & Brettspiele", "Freizeitparks & Erlebnisse"],
+    "isPublic": true
+  },
+  {
+    "title": "Puzzle (1000 Teile)",
+    "description": "Puzzle mit 1000 Teilen",
+    "interests": ["Gesellschaftsspiele & Brettspiele"],
+    "isPublic": true
+  },
+  {
+    "title": "Würfel /Karten Set",
+    "description": "Würfel- oder Karten-Set für unterwegs",
+    "interests": ["Gesellschaftsspiele & Brettspiele", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Brettspiel Gutschein",
+    "description": "Gutschein für Brettspiele",
+    "interests": ["Gesellschaftsspiele & Brettspiele"],
+    "isPublic": true
+  },
+  {
+    "title": "Ticket Gutschein (Theater/Konzert)",
+    "description": "Ticket-Gutschein für Theater oder Konzert",
+    "interests": ["Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Museums Jahreskarte / Ausstellungspass",
+    "description": "Jahreskarte/Ausstellungspass für Museen",
+    "interests": ["Kultur (Museum, Theater, Konzerte)", "Kunst & Design"],
+    "isPublic": true
+  },
+  {
+    "title": "Bildband (Kunst/Architektur/Fotografie)",
+    "description": "Bildband zu Kunst, Architektur oder Fotografie",
+    "interests": ["Kultur (Museum, Theater, Konzerte)", "Kunst & Design", "Fotografie"],
+    "isPublic": true
+  },
+  {
+    "title": "Merch",
+    "description": "Merchandise (z. B. Shirt, Tasse, Poster)",
+    "interests": ["Kultur (Museum, Theater, Konzerte)", "Filme & Serien", "Musik hören (Vinyl, Playlists)"],
+    "isPublic": true
+  },
+  {
+    "title": "Oper/Philharmonie Gutschein",
+    "description": "Gutschein für Oper oder Philharmonie",
+    "interests": ["Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Kultur Städtereise Gutschein (Kurztrip)",
+    "description": "Kurztrip-Gutschein für eine Kultur-Städtereise",
+    "interests": ["Kultur (Museum, Theater, Konzerte)", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Notenbuch / Songbook (passend zum Instrument)",
+    "description": "Notenbuch oder Songbook passend zum Instrument",
+    "interests": ["Musik machen (Instrumente)"],
+    "isPublic": true
+  },
+  {
+    "title": "Stimmgerät (Clip On)",
+    "description": "Clip-On-Stimmgerät für Instrumente",
+    "interests": ["Musik machen (Instrumente)"],
+    "isPublic": true
+  },
+  {
+    "title": "Instrumenten Pflegeset",
+    "description": "Pflegeset für Instrumente (Reinigung/Wartung)",
+    "interests": ["Musik machen (Instrumente)"],
+    "isPublic": true
+  },
+  {
+    "title": "Gitarrenständer",
+    "description": "Ständer zur sicheren Aufbewahrung eines Instruments",
+    "interests": ["Musik machen (Instrumente)"],
+    "isPublic": true
+  },
+  {
+    "title": "Notenständer",
+    "description": "Notenständer für Proben und Zuhause",
+    "interests": ["Musik machen (Instrumente)"],
+    "isPublic": true
+  },
+  {
+    "title": "Musikunterricht Gutschein",
+    "description": "Gutschein für Musikunterricht",
+    "interests": ["Musik machen (Instrumente)"],
+    "isPublic": true
+  },
+  {
+    "title": "Vinyl Schallplatte",
+    "description": "Vinyl-Schallplatte (Lieblingsalbum oder Klassiker)",
+    "interests": ["Musik hören (Vinyl, Playlists)"],
+    "isPublic": true
+  },
+  {
+    "title": "Streaming Abo Gutschein",
+    "description": "Abo-Gutschein für Streaming (Musik oder Filme/Serien)",
+    "interests": ["Musik hören (Vinyl, Playlists)", "Filme & Serien"],
+    "isPublic": true
+  },
+  {
+    "title": "Plattenspieler Zubehör",
+    "description": "Zubehör für Plattenspieler (z. B. Bürste, Slipmat)",
+    "interests": ["Musik hören (Vinyl, Playlists)"],
+    "isPublic": true
+  },
+  {
+    "title": "Bluetooth Lautsprecher",
+    "description": "Bluetooth-Lautsprecher für Zuhause oder unterwegs",
+    "interests": ["Musik hören (Vinyl, Playlists)", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Hi Fi Kopfhörerständer",
+    "description": "Kopfhörerständer für Hi-Fi und Ordnung am Setup",
+    "interests": ["Musik hören (Vinyl, Playlists)", "Wohnen & Deko", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Reise Kulturbeutel",
+    "description": "Kulturbeutel für Reisen",
+    "interests": ["Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Packwürfel Set",
+    "description": "Packwürfel-Set zum Organisieren des Koffers",
+    "interests": ["Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Universal Reiseadapter",
+    "description": "Universal-Reiseadapter für verschiedene Steckdosen",
+    "interests": ["Reisen & Urlaub", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Reisekissen",
+    "description": "Reisekissen für Bahn, Auto oder Flug",
+    "interests": ["Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Reiseführer (Stadt/Land)",
+    "description": "Reiseführer für Stadt oder Land",
+    "interests": ["Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Kofferanhänger",
+    "description": "Kofferanhänger zur schnellen Gepäckerkennung",
+    "interests": ["Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Gepäckwaage",
+    "description": "Gepäckwaage zum Wiegen des Koffers vor dem Flug",
+    "interests": ["Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Freizeitpark Ticket (Gutschein)",
+    "description": "Gutschein für Freizeitpark-Eintritt",
+    "interests": ["Freizeitparks & Erlebnisse"],
+    "isPublic": true
+  },
+  {
+    "title": "Erlebnisgutschein (z. B. Escape Room, Dinner)",
+    "description": "Erlebnisgutschein (Escape Room, Dinner, etc.)",
+    "interests": ["Freizeitparks & Erlebnisse", "Kultur (Museum, Theater, Konzerte)", "Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "VR Erlebnis Gutschein",
+    "description": "VR-Erlebnis-Gutschein",
+    "interests": ["Freizeitparks & Erlebnisse", "Technik & Gadgets", "Gaming"],
+    "isPublic": true
+  },
+  {
+    "title": "Kurztrip Gutschein (Städtereise)",
+    "description": "Gutschein für Kurztrip/Städtereise",
+    "interests": ["Freizeitparks & Erlebnisse", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Foto Ticket/Pass fürs Erlebnis (z. B. Fotopaket)",
+    "description": "Foto-Ticket/Pass für Erlebnis-Fotopakete",
+    "interests": ["Freizeitparks & Erlebnisse", "Fotoprodukte (Fotobuch, Prints, Rahmen)"],
+    "isPublic": true
+  },
+  {
+    "title": "Jahreskarte (Zoo/Freizeitpark – Gutschein)",
+    "description": "Jahreskarte für Zoo oder Freizeitpark (Gutschein)",
+    "interests": ["Freizeitparks & Erlebnisse"],
+    "isPublic": true
+  },
+  {
+    "title": "Tanzkurs Gutschein",
+    "description": "Gutschein für einen Tanzkurs",
+    "interests": ["Tanzen"],
+    "isPublic": true
+  },
+  {
+    "title": "Tanzschuhe / Tanzsneaker",
+    "description": "Tanzschuhe oder Tanzsneaker für Training und Kurse",
+    "interests": ["Tanzen", "Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Sport /Tanzkleidung (z. B. Leggings)",
+    "description": "Sport- oder Tanzkleidung wie Leggings",
+    "interests": ["Tanzen", "Sport & Fitness", "Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Musik Abo Gutschein",
+    "description": "Abo-Gutschein für Musik (z. B. Streamingdienst)",
+    "interests": ["Tanzen", "Musik hören (Vinyl, Playlists)"],
+    "isPublic": true
+  },
+  {
+    "title": "Trainings Handtuch + Trinkflasche",
+    "description": "Set aus Trainingshandtuch und Trinkflasche",
+    "interests": ["Tanzen", "Sport & Fitness"],
+    "isPublic": true
+  },
+  {
+    "title": "Tasche für Tanzschuhe",
+    "description": "Tasche zur Aufbewahrung und zum Transport von Tanzschuhen",
+    "interests": ["Tanzen"],
+    "isPublic": true
+  },
+  {
+    "title": "Schal / Tuch",
+    "description": "Schal oder Tuch als Accessoire",
+    "interests": ["Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Gürtel",
+    "description": "Gürtel als Accessoire",
+    "interests": ["Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Sonnenbrille",
+    "description": "Sonnenbrille als Accessoire",
+    "interests": ["Mode & Accessoires", "Wandern & Outdoor"],
+    "isPublic": true
+  },
+  {
+    "title": "Mütze / Cap",
+    "description": "Mütze oder Cap als Accessoire",
+    "interests": ["Mode & Accessoires", "Wandern & Outdoor"],
+    "isPublic": true
+  },
+  {
+    "title": "Tasche / Crossbody Bag",
+    "description": "Tasche oder Crossbody Bag für Alltag und unterwegs",
+    "interests": ["Mode & Accessoires", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Pflege Set für Schuhe",
+    "description": "Pflege-Set für Schuhe (Reinigung/Imprägnierung)",
+    "interests": ["Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Gutschein für Lieblingsladen",
+    "description": "Gutschein für den Lieblingsladen (Shopping)",
+    "interests": ["Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Wellness Gutschein",
+    "description": "Wellness-Gutschein (Spa, Massage, Sauna)",
+    "interests": ["Wellness & Entspannung", "Beauty & Pflege"],
+    "isPublic": true
+  },
+  {
+    "title": "Duftkerzen Set",
+    "description": "Duftkerzen-Set für gemütliche Atmosphäre",
+    "interests": ["Wellness & Entspannung", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Badesalz / Badebomben Set",
+    "description": "Badesalz- oder Badebomben-Set",
+    "interests": ["Wellness & Entspannung", "Beauty & Pflege"],
+    "isPublic": true
+  },
+  {
+    "title": "Massage Gutschein",
+    "description": "Gutschein für eine Massage",
+    "interests": ["Wellness & Entspannung"],
+    "isPublic": true
+  },
+  {
+    "title": "Wärmedecke / Wärmekissen",
+    "description": "Wärmedecke oder Wärmekissen für Entspannung",
+    "interests": ["Wellness & Entspannung", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Tee Set „Entspannung“",
+    "description": "Tee-Set für entspannte Abende",
+    "interests": ["Wellness & Entspannung", "Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Skincare Set",
+    "description": "Skincare-Set für Pflege und Routine",
+    "interests": ["Beauty & Pflege"],
+    "isPublic": true
+  },
+  {
+    "title": "Parfum / Duft Set",
+    "description": "Parfum- oder Duft-Set",
+    "interests": ["Beauty & Pflege", "Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Make up Pinsel Set",
+    "description": "Make-up Pinsel-Set",
+    "interests": ["Beauty & Pflege"],
+    "isPublic": true
+  },
+  {
+    "title": "Gesichtsmasken Set",
+    "description": "Gesichtsmasken-Set für Selfcare",
+    "interests": ["Beauty & Pflege", "Wellness & Entspannung"],
+    "isPublic": true
+  },
+  {
+    "title": "Handpflege Set",
+    "description": "Handpflege-Set (Creme, Öl, Pflege)",
+    "interests": ["Beauty & Pflege"],
+    "isPublic": true
+  },
+  {
+    "title": "Haarpflege Set",
+    "description": "Haarpflege-Set (Shampoo/Conditioner/Masken)",
+    "interests": ["Beauty & Pflege"],
+    "isPublic": true
+  },
+  {
+    "title": "Aquarell Set",
+    "description": "Aquarell-Set zum Malen und Kreativsein",
+    "interests": ["Kreativität & DIY", "Kunst & Design"],
+    "isPublic": true
+  },
+  {
+    "title": "DIY Bastelset",
+    "description": "DIY Bastelset für ein Kreativprojekt",
+    "interests": ["Kreativität & DIY"],
+    "isPublic": true
+  },
+  {
+    "title": "Strick /Häkel Starterset",
+    "description": "Starterset für Stricken oder Häkeln",
+    "interests": ["Kreativität & DIY"],
+    "isPublic": true
+  },
+  {
+    "title": "Modelliermasse Set",
+    "description": "Modelliermasse-Set für kreative Figuren und Deko",
+    "interests": ["Kreativität & DIY", "Kunst & Design"],
+    "isPublic": true
+  },
+  {
+    "title": "Acrylfarben Set",
+    "description": "Acrylfarben-Set für Malprojekte",
+    "interests": ["Kreativität & DIY", "Kunst & Design"],
+    "isPublic": true
+  },
+  {
+    "title": "Kreativ Workshop Gutschein",
+    "description": "Gutschein für Kreativ-Workshop (Malen, Töpfern, etc.)",
+    "interests": ["Kreativität & DIY", "Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Poster/Print",
+    "description": "Poster oder Print zur Wandgestaltung",
+    "interests": ["Kunst & Design", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Bildband (Design/Kunst)",
+    "description": "Bildband über Design oder Kunst",
+    "interests": ["Kunst & Design", "Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Museumshop Gutschein",
+    "description": "Gutschein für den Museumshop",
+    "interests": ["Kunst & Design", "Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Design Objekt",
+    "description": "Design-Objekt als Deko oder Sammlerstück",
+    "interests": ["Kunst & Design", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Architektur Kalender",
+    "description": "Kalender mit Architektur- oder Designmotiven",
+    "interests": ["Kunst & Design", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Illustrations /Coffee Table Book",
+    "description": "Illustrations- oder Coffee Table Book",
+    "interests": ["Kunst & Design"],
+    "isPublic": true
+  },
+  {
+    "title": "Akkuschrauber",
+    "description": "Kompakter Akkuschrauber für Heimwerken",
+    "interests": ["Handwerk", "Tüfteln (Modellbau, DIY-Tech)"],
+    "isPublic": true
+  },
+  {
+    "title": "Bits  und Bohrer Set",
+    "description": "Bits- und Bohrer-Set für Werkzeuge",
+    "interests": ["Handwerk"],
+    "isPublic": true
+  },
+  {
+    "title": "Werkstatt Organizer",
+    "description": "Organizer für Schrauben, Werkzeuge und Kleinteile",
+    "interests": ["Handwerk"],
+    "isPublic": true
+  },
+  {
+    "title": "Messwerkzeug Set (Zollstock, Winkel, Maßband)",
+    "description": "Messwerkzeug-Set für Projekte und Reparaturen",
+    "interests": ["Handwerk"],
+    "isPublic": true
+  },
+  {
+    "title": "Arbeitshandschuhe",
+    "description": "Robuste Arbeitshandschuhe für Werkstatt und Garten",
+    "interests": ["Handwerk", "Garten & Pflanzen"],
+    "isPublic": true
+  },
+  {
+    "title": "Pflanzen Set für Einsteiger",
+    "description": "Pflanzen-Set für Einsteiger (pflegeleicht)",
+    "interests": ["Garten & Pflanzen", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Kräutergarten Set (Indoor)",
+    "description": "Indoor-Kräutergarten-Set für Küche und Fensterbank",
+    "interests": ["Garten & Pflanzen", "Kochen"],
+    "isPublic": true
+  },
+  {
+    "title": "Gießkanne",
+    "description": "Gießkanne für Zimmerpflanzen oder Garten",
+    "interests": ["Garten & Pflanzen"],
+    "isPublic": true
+  },
+  {
+    "title": "Pflanzenerde + Dünger Set",
+    "description": "Set aus Pflanzenerde und Dünger",
+    "interests": ["Garten & Pflanzen"],
+    "isPublic": true
+  },
+  {
+    "title": "Übertöpfe Set",
+    "description": "Übertöpfe-Set für Pflanzen",
+    "interests": ["Garten & Pflanzen", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Hundespielzeug Set",
+    "description": "Spielzeug-Set für Hunde",
+    "interests": ["Haustiere"],
+    "isPublic": true
+  },
+  {
+    "title": "Leckerli Probierbox",
+    "description": "Leckerli-Probierbox für Haustiere",
+    "interests": ["Haustiere", "Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Haustier Pflegeset",
+    "description": "Pflegeset für Haustiere (Bürste, Pflegeprodukte)",
+    "interests": ["Haustiere"],
+    "isPublic": true
+  },
+  {
+    "title": "Intelligenzspielzeug für Tiere",
+    "description": "Intelligenzspielzeug zur Beschäftigung von Haustieren",
+    "interests": ["Haustiere"],
+    "isPublic": true
+  },
+  {
+    "title": "Napf Set / Trinkbrunnen",
+    "description": "Napf-Set oder Trinkbrunnen für Haustiere",
+    "interests": ["Haustiere"],
+    "isPublic": true
+  },
+  {
+    "title": "Katzenspielzeug Set",
+    "description": "Spielzeug-Set für Katzen",
+    "interests": ["Haustiere"],
+    "isPublic": true
+  },
+  {
+    "title": "Kino Gutschein",
+    "description": "Gutschein fürs Kino",
+    "interests": ["Filme & Serien", "Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Film /Serien Merch",
+    "description": "Merchandise zu Film oder Serie",
+    "interests": ["Filme & Serien", "Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Popcorn /Snack Box „Filmabend“",
+    "description": "Snackbox für einen Filmabend",
+    "interests": ["Filme & Serien", "Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Blu ray / Collector’s Edition",
+    "description": "Blu-ray oder Collector’s Edition eines Lieblingsfilms",
+    "interests": ["Filme & Serien"],
+    "isPublic": true
+  },
+  {
+    "title": "Beamer Leinwand",
+    "description": "Leinwand für Beamer und Heimkino",
+    "interests": ["Filme & Serien", "Technik & Gadgets", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Kamera Stativ",
+    "description": "Stativ für stabile Fotos und Videos",
+    "interests": ["Fotografie"],
+    "isPublic": true
+  },
+  {
+    "title": "Objektiv Reinigungsset",
+    "description": "Reinigungsset für Kameraobjektive",
+    "interests": ["Fotografie"],
+    "isPublic": true
+  },
+  {
+    "title": "Kameragurt",
+    "description": "Kameragurt für komfortables Tragen",
+    "interests": ["Fotografie"],
+    "isPublic": true
+  },
+  {
+    "title": "Fotokurs Gutschein",
+    "description": "Gutschein für Fotokurs oder Workshop",
+    "interests": ["Fotografie", "Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Speicherkarte (SD)",
+    "description": "SD-Speicherkarte für Kamera oder Geräte",
+    "interests": ["Fotografie", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Kameratasche",
+    "description": "Kameratasche für Transport und Schutz",
+    "interests": ["Fotografie", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Fotobuch Gutschein",
+    "description": "Gutschein für Fotobuch-Erstellung",
+    "interests": ["Fotoprodukte (Fotobuch, Prints, Rahmen)", "Fotografie"],
+    "isPublic": true
+  },
+  {
+    "title": "Premium Prints",
+    "description": "Premium-Prints (hochwertige Fotoabzüge)",
+    "interests": ["Fotoprodukte (Fotobuch, Prints, Rahmen)", "Fotografie", "Kunst & Design"],
+    "isPublic": true
+  },
+  {
+    "title": "Bilderrahmen Set",
+    "description": "Bilderrahmen-Set für Fotos oder Prints",
+    "interests": ["Fotoprodukte (Fotobuch, Prints, Rahmen)", "Wohnen & Deko", "Kunst & Design"],
+    "isPublic": true
+  },
+  {
+    "title": "Foto Album",
+    "description": "Fotoalbum zum Einkleben oder Einstecken",
+    "interests": ["Fotoprodukte (Fotobuch, Prints, Rahmen)"],
+    "isPublic": true
+  },
+  {
+    "title": "Sofortbildkamera",
+    "description": "Sofortbildkamera für spontane Erinnerungen",
+    "interests": ["Fotografie", "Fotoprodukte (Fotobuch, Prints, Rahmen)", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Fotokalender",
+    "description": "Fotokalender (personalisiert)",
+    "interests": ["Fotoprodukte (Fotobuch, Prints, Rahmen)"],
+    "isPublic": true
+  },
+  {
+    "title": "Auto Organizer",
+    "description": "Organizer für Auto und Kofferraum",
+    "interests": ["Autos"],
+    "isPublic": true
+  },
+  {
+    "title": "Autopflege Set (Innen/außen)",
+    "description": "Autopflege-Set für innen und außen",
+    "interests": ["Autos"],
+    "isPublic": true
+  },
+  {
+    "title": "Handyhalterung fürs Auto",
+    "description": "Handyhalterung für Navigation im Auto",
+    "interests": ["Autos", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Mini Kompressor (Reifen)",
+    "description": "Mini-Kompressor zum Aufpumpen von Reifen",
+    "interests": ["Autos", "Handwerk"],
+    "isPublic": true
+  },
+  {
+    "title": "Duft Set fürs Auto",
+    "description": "Duft-Set fürs Auto",
+    "interests": ["Autos"],
+    "isPublic": true
+  },
+  {
+    "title": "Park /Rückfahrhilfe Gadget",
+    "description": "Gadget für Parken/Rückfahrhilfe",
+    "interests": ["Autos", "Technik & Gadgets"],
+    "isPublic": true
+  },
+  {
+    "title": "Motorrad Pflegeset",
+    "description": "Pflegeset für Motorrad (Reinigung/Wartung)",
+    "interests": ["Motorräder"],
+    "isPublic": true
+  },
+  {
+    "title": "Motorrad Handschuhe",
+    "description": "Motorradhandschuhe für Fahrten",
+    "interests": ["Motorräder"],
+    "isPublic": true
+  },
+  {
+    "title": "Halstuch / Schlauchschal",
+    "description": "Halstuch oder Schlauchschal für Fahrten und Outdoor",
+    "interests": ["Motorräder", "Wandern & Outdoor"],
+    "isPublic": true
+  },
+  {
+    "title": "Helm Visierreiniger Set",
+    "description": "Reinigungsset für Helmvisier",
+    "interests": ["Motorräder"],
+    "isPublic": true
+  },
+  {
+    "title": "Tankrucksack / kleine Gepäcktasche",
+    "description": "Tankrucksack oder kleine Gepäcktasche fürs Motorrad",
+    "interests": ["Motorräder", "Reisen & Urlaub"],
+    "isPublic": true
+  },
+  {
+    "title": "Gutschein für Motorrad Zubehörshop",
+    "description": "Gutschein für Motorrad-Zubehörshop",
+    "interests": ["Motorräder"],
+    "isPublic": true
+  },
+  {
+    "title": "Designer Armband",
+    "description": "Designer-Armband als Schmuckstück",
+    "interests": ["Schmuck & Uhren", "Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Schmuck Aufbewahrung",
+    "description": "Schmuckbox/Schmuckaufbewahrung",
+    "interests": ["Schmuck & Uhren", "Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Schmuck Reinigungsset",
+    "description": "Reinigungsset für Schmuck",
+    "interests": ["Schmuck & Uhren"],
+    "isPublic": true
+  },
+  {
+    "title": "Uhrband (wechselbar)",
+    "description": "Wechselbares Uhrband",
+    "interests": ["Schmuck & Uhren", "Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Kette/Ohrringe",
+    "description": "Kette oder Ohrringe als Schmuck",
+    "interests": ["Schmuck & Uhren", "Mode & Accessoires"],
+    "isPublic": true
+  },
+  {
+    "title": "Gravur Gutschein (für personalisierte Teile)",
+    "description": "Gutschein für Gravur/Personalisierung",
+    "interests": ["Schmuck & Uhren"],
+    "isPublic": true
+  },
+  {
+    "title": "Deko Kissen",
+    "description": "Dekokissen für Sofa oder Bett",
+    "interests": ["Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "LED Lichterkette",
+    "description": "LED-Lichterkette für gemütliche Beleuchtung",
+    "interests": ["Wohnen & Deko"],
+    "isPublic": true
+  },
+  {
+    "title": "Tisch /Vasen Deko",
+    "description": "Tisch- oder Vasendeko für Zuhause",
+    "interests": ["Wohnen & Deko", "Kunst & Design"],
+    "isPublic": true
+  },
+  {
+    "title": "Kaffee /Teeset für Zuhause",
+    "description": "Kaffee- oder Teeset für Zuhause",
+    "interests": ["Wohnen & Deko", "Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Meditationskissen",
+    "description": "Meditationskissen für Sitzmeditation",
+    "interests": ["Spiritualität", "Wellness & Entspannung"],
+    "isPublic": true
+  },
+  {
+    "title": "Räucherstäbchen Set + Halter",
+    "description": "Räucherstäbchen-Set mit Halter",
+    "interests": ["Spiritualität", "Wellness & Entspannung"],
+    "isPublic": true
+  },
+  {
+    "title": "Achtsamkeits Journal",
+    "description": "Journal für Achtsamkeit und Reflexion",
+    "interests": ["Spiritualität", "Schreiben (Poetry, Journaling)"],
+    "isPublic": true
+  },
+  {
+    "title": "Klangschale",
+    "description": "Klangschale für Meditation und Entspannung",
+    "interests": ["Spiritualität", "Wellness & Entspannung"],
+    "isPublic": true
+  },
+  {
+    "title": "Yoga-/Meditationskurs Gutschein",
+    "description": "Gutschein für Yoga- oder Meditationskurs",
+    "interests": ["Spiritualität", "Sport & Fitness", "Wellness & Entspannung"],
+    "isPublic": true
+  },
+  {
+    "title": "Wein Probier Set",
+    "description": "Wein-Probierset mit verschiedenen Weinen",
+    "interests": ["Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Feinkost Box (z. B. Antipasti, Käse, Gewürze)",
+    "description": "Feinkost-Box (Antipasti, Käse, Gewürze)",
+    "interests": ["Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Kaffee Probier Set (Specialty)",
+    "description": "Specialty Kaffee-Probierset",
+    "interests": ["Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Schokoladen Tasting Set",
+    "description": "Schokoladen-Tasting-Set",
+    "interests": ["Genuss (Food, Wein, Feinkost)"],
+    "isPublic": true
+  },
+  {
+    "title": "Koch-/Tasting Gutschein (Wein/Whisky/Käse)",
+    "description": "Gutschein für Tasting (Wein/Whisky/Käse) oder Koch-Event",
+    "interests": ["Genuss (Food, Wein, Feinkost)", "Kultur (Museum, Theater, Konzerte)"],
+    "isPublic": true
+  },
+  {
+    "title": "Hochwertiges Olivenöl Set",
+    "description": "Hochwertiges Olivenöl-Set zum Kochen und Genießen",
+    "interests": ["Genuss (Food, Wein, Feinkost)", "Kochen"],
+    "isPublic": true
+  }
+]

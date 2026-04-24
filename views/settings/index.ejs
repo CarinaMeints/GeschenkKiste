@@ -1,0 +1,41 @@
+<%- include('../partials/app-head', { title: 'Einstellungen – GeschenkKiste' }) %>
+
+<div class="mb-8">
+  <h1 class="app-h1">⚙️ Einstellungen</h1>
+  <p class="app-subtle mt-1">Passe an, wie weit im Voraus To-Dos und Events angezeigt werden.</p>
+</div>
+
+<section class="app-panel">
+  <div class="app-panel-header">
+    <h2 class="app-panel-title">Zeithorizont</h2>
+  </div>
+
+  <div class="app-panel-body">
+    <form action="/settings" method="POST" class="space-y-6">
+      <div>
+        <label class="block text-white font-semibold mb-2">
+          Zeithorizont (To-Dos & anstehende Events)
+        </label>
+
+        <select name="todoHorizonMonths" class="w-full px-4 py-2.5 rounded-lg bg-white text-slate-900 border border-white/20" required>
+          <% allowedOptions.forEach(m => { %>
+          <option value="<%= m %>" <%= (todoHorizonMonths === m ? 'selected' : '') %>>
+            <%= m %> Monat<%= m === 1 ? '' : 'e' %>
+          </option>
+          <% }) %>
+        </select>
+
+        <p class="text-sm text-white/80 mt-2">
+          Diese Einstellung wird global gesetzt und betrifft das Dashboard, deine To-Dos und Event-Übersichten.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row gap-3">
+        <button type="submit" class="btn-primary flex-1 py-3">Speichern</button>
+        <a href="/dashboard" class="btn-surface flex-1 justify-center py-3">Abbrechen</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include('../partials/app-foot') %>
