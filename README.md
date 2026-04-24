@@ -135,6 +135,7 @@ Konsistenz wird u. a. über **Unique-Indizes** abgesichert (z. B. PersonOcca
 Die Laufzeitkonfiguration wird **ausschließlich über Environment Variables** gesetzt (lokal z. B. per `.env`, in Render über das Dashboard). **Zugangsdaten/Secrets werden nicht im Repository gespeichert.**
 
 | Variable | Zweck |
+|---|---|
 | `APP_BASE_URL` | Erwartete Basis-URL (u. a. für Same-Origin/CSRF-Prüfung und absolute Links) |
 | `MONGODB_URI` | Verbindung zu MongoDB Atlas |
 | `SESSION_SECRET` | Signieren / Verschlüsseln der Session |
