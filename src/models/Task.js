@@ -58,22 +58,30 @@ taskSchema.statics.createDateTask = async function (
   year,
   userId,
 ) {
-  const PersonOccasion = mongoose.model("PersonOccasion");
+  const exists = await this.findOne({
+    personOccasion: personOccasionId,
+    year,
+    createdBy: userId,
+  });
+
+  if (exists) return exists;
+
+  const Event = require("./Event");
+  const eventExists = await Event.findOne({
+    personOccasion: personOccasionId,
+    year,
+    createdBy: userId,
+  }).lean();
+
+  if (eventExists) return null;
+
+  const PersonOccasion = require("../models/PersonOccasion");
   const po = await PersonOccasion.findOne({
     _id: personOccasionId,
     createdBy: userId,
   })
     .populate("person")
     .populate("occasion");
-
-  const exists = await this.findOne({
-    personOccasion: personOccasionId,
-    year,
-    createdBy: userId,
-    isDone: false,
-  });
-
-  if (exists) return exists;
 
   return this.create({
     title: `Datum für ${po.occasion.name} ${year} (${po.person.name}) hinterlegen`,
