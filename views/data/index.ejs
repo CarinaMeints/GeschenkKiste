@@ -200,7 +200,7 @@
           <div class="min-w-0">
             <div class="font-semibold text-white truncate"><%= person.name %></div>
             <div class="text-xs text-white/80">
-              <% if (person.hasBirthday) { %>
+              <% if (person.birthdayDay && person.birthdayMonth) { %>
               🎂 <%= person.birthdayDay %>. <%= months[(person.birthdayMonth || 1) - 1] %>
               <% } else { %>
               <span class="text-white/70 font-semibold">kein Geburtstag hinterlegt</span>
